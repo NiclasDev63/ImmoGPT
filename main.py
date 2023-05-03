@@ -5,8 +5,8 @@ import utils.make_request as make_request
 prompt = pre_prompt.run_pre_prompt()
 
 
-resp = make_request(prompt)
-resp_json = response_parser(resp)
+resp = make_request.make_request(prompt)
+resp_json = response_parser.response_parser(resp)
 print(resp_json)
 
 

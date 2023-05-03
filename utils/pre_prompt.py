@@ -15,19 +15,28 @@ def run_pre_prompt() -> str:
     COMMANDS:
 
     "google": "Searches the web and can help you find informations"
-        "args": "The prompt you want so search for in google"
+        "google_args": "The prompt you want so search for in google"
 
-    "calculate": "helps you answer mathematical questions"
+    "calculate": "helps you add two numbers"
+        "number1": "the first number to add"
+        "number2": "the second number to add"
 
-    These commands are only for you and the User cant use these commands
+    Use the commands only if needed (if you not sure about your answer).
+    These commands are only for you and the User cant use these commands.
 
     From now on you only answer in JSON format, like the example below:
     """
 
-    pre_prompt += '{ \
-        "answer": "your answer to the question from the user", \
-        "commandName": "the command you want to use" \
-        "args": "The prompt you want so search for in google" \
-    }'
+    pre_prompt += r"""
+    {
+        "answer":"The answer you want to give",
+        "command": {
+            "name": "command name",
+            "args":{
+                "arg name": "value"
+            }
+        }
+    }
+    """
 
     return pre_prompt + input("User: ")

@@ -1,6 +1,6 @@
 import json
 import re
-import make_request
+import utils.make_request as make_request
 
 
 def response_parser(response: str) -> json:
@@ -14,7 +14,7 @@ def response_parser(response: str) -> json:
         json: Valid json which includes the command and answer
 
     Raises:
-        json.decoder.JSONDecodeError: If the reponse can't get converted into JSON
+        json.decoder.JSONDecodeError: If json can't get extracted from the response
     """
 
 
@@ -23,19 +23,19 @@ def response_parser(response: str) -> json:
     try:
         response_json = json.loads(response)
     except json.decoder.JSONDecodeError:
-        response_json = "{" + re.split("{|}", response)[1] + "}"
-        response_json = re.sub("\n","", response_json)
+        response_json = re.search(r'{.*}', response, re.DOTALL).group(0)
 
         try:
             response_json = json.loads(response_json)
         except json.decoder.JSONDecodeError:
+            # If nothing works, trying to get ChatGPT to parse the reponse
             prompt = f"Search for the two outer brackets in the following text \
-            and only return the JSON within it including the brackets: {response_json}"
+            and only return the JSON within it including, the brackets: {response_json}"
 
             try:
-                response_json = json.loads(make_request(prompt))
+                response_json = json.loads(make_request.make_request(prompt))
             except json.decoder.JSONDecodeError:
-                print("Cant extract json from reponse")
+                print("Cant extract json from response")
 
     if response_json != "":
         return response_json
