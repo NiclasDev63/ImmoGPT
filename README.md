@@ -2,6 +2,7 @@
 ImmoGPT is an LLM based Chatbot which can be used to find a suitable property.  
 It uses GPT4FREE (https://github.com/xtekky/gpt4free) to gain free access to GPT3.5 and GPT4.  
 Currently ImmoGPT only has access to the german real estate market through ImmoScout24.  
+Since the ImmoScout24 API is unfortunately very expensive (at least the last time I requested a key) ImmoGPT crawls the site using a conventional web crawler.
 
 
 ## 🚀 Quickstart
