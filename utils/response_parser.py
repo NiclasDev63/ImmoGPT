@@ -1,6 +1,6 @@
 import json
 import re
-import utils.make_request as make_request
+import utils.call_AI as call_AI
 import tools.ImmoScoutScaper as ImmoScoutScaper
 
 
@@ -37,12 +37,13 @@ def response_parser(response: str) -> dict:
             and only return the JSON within it including, the brackets: {response_json}"
 
             try:
-                response_json = json.loads(make_request.make_request(prompt))
+                response_json = json.loads(call_AI.make_request(prompt))
             except json.decoder.JSONDecodeError:
                 print("Cant extract json from response")
 
     if response_json != "" and "command" in response_json:
+        print(response_json)
         command = response_json["command"]
-        if command == "ImmoScout":
-            immoscraper = ImmoScoutScaper(response_json)
+        if command["name"] == "ImmoScout":
+            immoscraper = ImmoScoutScaper.ImmoScoutScraper(command["args"])
             immoscraper.scrapImmos()

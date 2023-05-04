@@ -1,8 +1,8 @@
 from random import choice
 
-def randomAgent():
-        #sleeptime = randint(5,10)
-        #time.sleep(sleeptime)
+def randomAgent() -> dict:
+
+        """Returns a valid user agent for http requests"""
 
         agents = [
                 "Mozilla/5.0 (Linux; Android 8.0.0; WAS-LX1 Build/HUAWEIWAS-LX1; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/93.0.4577.82 Mobile Safari/537.36 [FB_IAB/Orca-Android;FBAV/331.0.0.15.119;]",

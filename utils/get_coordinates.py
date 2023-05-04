@@ -1,7 +1,8 @@
 import requests
 import os
+from typing import Tuple
 
-def get_coordinates(city: str) -> tuple(float, float):
+def get_coordinates(city: str)-> Tuple[float, float]:
     """
     Converts the desired location into coordinates using the "GeoDB Cities API" from RapidAPI
     https://rapidapi.com/wirefreethought/api/geodb-cities/
