@@ -21,7 +21,7 @@ Since the ImmoScout24 API is unfortunately very expensive (at least the last tim
 - [ ] Add Immo calculator  
 - [ ] Maybe add more Parameters to ImmoScout Scrapper  
 - [ ] Search for useful APIs  
-- [ ] Add loop and memory for chatbot
-. [ ] Add token counter if memory is used, so token limit does not get exceeded (can use OPENAI code to approximate tokens)
+- [ ] Add loop and memory for chatbot  
+- [ ] Add token counter if memory is used, so token limit does not get exceeded (can use OPENAI code to approximate tokens)
 
  
