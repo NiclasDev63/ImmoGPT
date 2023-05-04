@@ -19,7 +19,7 @@ Since the ImmoScout24 API is unfortunately very expensive (at least the last tim
 ## ✅ TODOs
 - [ ] (Add google search)  
 - [ ] Add Immo calculator  
-- [ ] Complete ImmoScout Scrapper  
+- [ ] Maybe add more Parameters to ImmoScout Scrapper  
 - [ ] Search for useful APIs  
 - [ ] Add loop and memory for chatbot  
 
