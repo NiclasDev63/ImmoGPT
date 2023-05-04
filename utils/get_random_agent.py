@@ -1,6 +1,6 @@
 from random import choice
 
-def randomAgent() -> dict:
+def random_agent() -> dict:
 
         """Returns a valid user agent for http requests"""
 

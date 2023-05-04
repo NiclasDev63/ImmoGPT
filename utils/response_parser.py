@@ -25,7 +25,6 @@ def response_parser(response: str) -> dict:
         response_json = json.loads(response)
     except json.decoder.JSONDecodeError:
         response_json = re.search(r'{.*}', response, re.DOTALL).group(0)
-        response_json = re.sub("\'", "\"", response_json)
         response_json = re.sub("\s", " ", response_json)
 
 
@@ -44,6 +43,7 @@ def response_parser(response: str) -> dict:
     if response_json != "" and "command" in response_json:
         print(response_json)
         command = response_json["command"]
-        if command["name"] == "ImmoScout":
-            immoscraper = ImmoScoutScaper.ImmoScoutScraper(command["args"])
-            immoscraper.scrapImmos()
+        if command != None and "name" in command:
+            if command["name"] == "ImmoScout":
+                immoscraper = ImmoScoutScaper.ImmoScoutScraper()
+                immoscraper.scrapImmos(command["args"])

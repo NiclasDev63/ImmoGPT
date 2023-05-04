@@ -1,7 +1,10 @@
 from bs4 import BeautifulSoup
 import utils.get_coordinates as get_coordinates
 import utils.get_random_agent as random_agent
-
+import utils.call_AI as call_AI
+import json
+import requests
+from datetime import datetime
 
 class ImmoScoutScraper:
     """
@@ -12,38 +15,65 @@ class ImmoScoutScraper:
 
     """
 
-    def __init__(self, search_data: dict):
-        self.data = search_data
+    def __init__(self):
+        self.data = None
 
         """
         This cookie needs to be set to scrap ImmoScout24.
         Unfortunately it is only a temporary cookie and must be renewed every few requests
         """
         self.reese84 = {
-            "reese84": "3:XdU2wJUEKW15haSwlllSNQ==:Fm67AiqbVtzzW2iJ9w38jiaRyr9SDFqbpCwRF9FKcAszSN9yr4oxjYggbqvozyWUF6c9rPCCyazUm8LARJ9sj6cpOLZYg8TPyJ97w32Kolswt1+XE9Ucj2/rMiB0yvxDBYZ/TSnP2BRslfsw2F10LBpvSEiIe1U56QMik2DQrMpjOxL7n7LWZsYWPr4wrm9bFrCb3/ffOsbL7b29D/yCb3vOhlX3xIMfftvquxE/XAZjBzQCNH+C83pa5vhhrZCFxDsJBLStcCK0bOCrIzHk+qW9MxrI3pE9MgK2Zai6eWoJ/VFc8QPU6bWsL1zXkXBPUNKMzRJM3kfzWx4ZOo5hLAs8BLx9PwLJTFnY7PdX4JSMiugFTOEXxya7HAEA8NmBl2Qa9wV6raT8IBCrZjKlL/ErtMDuS23PxZxJAzDVhqeEZVtBdvC86Ayxw9drqFe5kgvt+W8dxsjKtaPQ6pA8HmEq0uf+ckBN+8gA6/Mnsesikfc8TXtyCTHuxnEaJRxi:CLiIko6ehmKNPwgdci8k1ptlJpAiv2QLdmPX0eeSblM="
+            "reese84": 
+            "3:Wk2vhfptOxkyIjlZG4F3hA==:lU/cjJov1AqtkN+i6zwl+4LLOpK8OwK2/MHAYvFjibXZTIYzYAUe4Q/GQR/L/Qv8+TLAiQKN7SJTN1KDUtP4ABFbAFGKMQxVpfMqlmKdXrOkO2GayeuatT2RaF7a1RYQhG7RFjd+ZibwtU3rGYeFYf2lmUSFE05OVr/WPrL0CFw1mrDUx9p0SKFpWvQbwI7o+om/bzKeJTphqF3zNSJAdAbpD6VXnXE8PCRbV/z6z3AxxgOD8cW/2/gc1mR2dNqgBOWN8/zAqFxo9wW9tQGwf5gHPtzgVmc3BwslNIvYHzlOaULHb9jhzjus6gE0QezOuokxOmAJgll9iQ9+jNBSwSkyMc4Afygg1v0LG2lwjvmUvb6vXJ3Z6DPpZ+4zeojb6Y2cx0c7KynnxnVjbouAPqwJD0byF7QoWXvrT1Vy1yBLNLslQH2UACw1PNwupHCYtVWYdf2qJqM7D0f4vWyBV2b9W878zi6NGz7khwFyyf9Jxp7TznK/rPJrhuYAHicefhpQ9613Rth3G/mRFPRWwQ==:YYJCRYSA5Ipo1SKYsLSq8mQquoPt80su9HZT2zhpoOI="
         }
 
         self.base_url = "https://www.immobilienscout24.de/Suche/radius/"
 
+    
+    def _prompt(self, data):
+        prompt = f"""
+            The user has asked you about the best properties in {self.data["location"]} which you have now selected from ImmoScout24. The following list contains the data of the properties you have picked out in Json format, of which you now pick out 5 and give the user all the important data.
+            It is very Important, that you give the user the matching link.
 
-    def prompt():
-        pass
+            LIST WITH THE DATA:
+
+            {data}
+        
+        """
+
+        return prompt
 
 
-    def scrapImmos(self):
+    def scrapImmos(self, search_data):
+
         """Searches for properties with the desired parameters"""
+
+        self.data = search_data
+        url = self._create_url()
+        if url != -1:
+            resp = requests.get(url, cookies=self.reese84, headers = random_agent.random_agent())
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                data_list_of_dic = self._extract_results(self._html_parser(soup))
+                if data_list_of_dic != -1:
+                    print(call_AI.make_request(self._prompt(data_list_of_dic)))
+
+            else: 
+                print("Can't reach ImmoScout")
+
+
+    def _create_url(self) -> str:
+
+        """Creates an Immoscout24 link with the desired parameters"""
 
         price_url = self._extract_price()
         coord_url = self._extract_coords()
 
         if price_url != -1 and coord_url != -1:
-            url = self.base_url + price_url + self._extract_squaremeters() + coord_url
-            print(url)
-
-        else:
+            return self.base_url + price_url + self._extract_squaremeters() + coord_url
+        else: 
             print("Can't create URL for request")
-
-
+            return -1
 
     def _extract_squaremeters(self) -> str:
 
@@ -51,9 +81,9 @@ class ImmoScoutScraper:
 
         url = "livingspace="
 
-        if "minLivingSpace" in self.data:
+        if "minLivingSpace" in self.data and self.data["minLivingSpace"] != None:
             url += str(self.data["minLivingSpace"])
-        if "maxLivingSpace" in self.data:
+        if "maxLivingSpace" in self.data and self.data["maxLivingSpace"] != None:
             url += "-" + str(self.data["maxLivingSpace"])
 
         url += "&"
@@ -67,8 +97,8 @@ class ImmoScoutScraper:
 
         url = ""
 
-        if "type" not in self.data: 
-            print("Can't parser location from json")
+        if "type" not in self.data or self.data["type"] == None: 
+            print("Can't parse type from json")
             return -1
         
         elif self.data["type"] == "rent": url += "wohnung-mieten?"
@@ -76,10 +106,10 @@ class ImmoScoutScraper:
 
         url += "price="
 
-        if "minPrice" in self.data:
+        if "minPrice" in self.data and self.data["minPrice"] != None:
             url += str(self.data["minPrice"])
 
-        if "maxPrice" in self.data:
+        if "maxPrice" in self.data and self.data["maxPrice"] != None:
             url += "-" + str(self.data["maxPrice"])
         
         url += "&"
@@ -93,12 +123,12 @@ class ImmoScoutScraper:
         
         """Converts the desired location into url format"""
 
-        if "location" in self.data:
+        if "location" in self.data and self.data["location"] != None:
             coords = get_coordinates.get_coordinates(self.data["location"])
             if coords != -1:
 
                 radius = 1
-                if "radius" in self.data and int(self.data["radius"]) > 1:
+                if "radius" in self.data and self.data["radius"] != None and int(self.data["radius"]) > 1:
                     radius = self.data["radius"]
 
                 return "geocoordinates=" + str(coords[0]) + ";" + str(coords[1]) + ";" + str(radius)
@@ -106,4 +136,63 @@ class ImmoScoutScraper:
         else:
             print("Can't parse location from json")
             return -1
+        
+        
+    def _html_parser(self, soup: BeautifulSoup) -> dict:
+        
+        """Parses the html to get the results"""
+
+        scripts = soup.find_all("script")
+        for script in scripts:
+            try:
+                a = script.string.strip()
+                if 'IS24.resultList' in a:
+                    s = script.string.split('\n')
+                    for line in s:
+                        if line.strip().startswith('resultListModel'):
+                            resultListModel = line.strip('resultListModel: ')
+                            immo_json = json.loads(resultListModel[:-1])
+
+                            searchResponseModel = immo_json[u'searchResponseModel']
+                            resultlist_json = searchResponseModel[u'resultlist.resultlist']
+
+                            return resultlist_json
+
+            except AttributeError:
+                print("Can't parse ImmoScout results")
+                return -1
     
+
+    def _extract_results(self, resp: dict) -> list[dict]:
+        
+        """Parses the resultlist_json and extracts the important information"""
+        try:
+            if resp['resultlistEntries'][0]["@numberOfHits"] == '0':
+                print("Unfortionatly there were no results, try changing your search parameters")
+                return -1
+            results_json = [{} for _ in resp['resultlistEntries'][0][u'resultlistEntry']]
+            for idx, i in enumerate(resp['resultlistEntries'][0][u'resultlistEntry']):
+                if isinstance(i, dict):
+                    
+                    realEstate_json = i[u"resultlist.realEstate"]
+
+                    results_json[idx]["adress"] = realEstate_json["address"]["description"]["text"]
+
+                    results_json[idx]["squaremeter"] = realEstate_json["livingSpace"]
+
+                    results_json[idx]["immo_id"] = i["realEstateId"]
+
+                    results_json[idx]["price"] = realEstate_json["price"]["value"]
+
+                    results_json[idx]["number_of_rooms"] = realEstate_json["numberOfRooms"]
+
+                    results_json[idx]["publish_date"] = datetime.fromisoformat(i["@publishDate"]).strftime("%d. %B %Y, %H:%M Uhr")
+
+                    results_json[idx]["link"] = "https://www.immobilienscout24.de/" + str(results_json[idx]["immo_id"])
+
+        except KeyError as e:
+                print("Can't parse ImmoScout results")
+                return -1
+        
+        return results_json
+            

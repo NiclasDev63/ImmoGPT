@@ -25,8 +25,13 @@ def get_coordinates(city: str)-> Tuple[float, float]:
 
     response = requests.get(url, headers=headers, params=querystring)
     if response.status_code == 200:
-        response = response.json()
-        return response["data"][0]["latitude"], response["data"][0]["longitude"]
+        try:
+            response = response.json()
+            return response["data"][0]["latitude"], response["data"][0]["longitude"]
+        except Exception as e:
+            print("Exception thrown while getting coordinates")
+            print("Error: ", e)
+            return -1
     else: 
         print("Can't get coordinates")
         return -1

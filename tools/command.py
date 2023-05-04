@@ -12,7 +12,7 @@ def get_commands():
             "minPrice": "the min price the User wants to pay (if specified)"
             "maxPrice": "the max price the User wants to pay (if specified)"
             "location": "the location the User is interested in (MUST BE SPECIFIED)"
-            "radius" : "the radius around the location (if specified)"
+            "radius" : "the radius around the location as integer (if specified)"
             "minLivingSpace": "min size of house or apartment"
             "maxLivingSpace": "max size of house or apartment"
 
