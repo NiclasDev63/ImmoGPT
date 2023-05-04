@@ -1,4 +1,4 @@
-
+import tools.command as command
 
 def run_pre_prompt() -> str:
     """
@@ -12,14 +12,7 @@ def run_pre_prompt() -> str:
     pre_prompt = f"""
     You can use the following commands to help you complete your task:
 
-    COMMANDS:
-
-    "google": "Searches the web and can help you find informations"
-        "google_args": "The prompt you want so search for in google"
-
-    "calculate": "helps you add two numbers"
-        "number1": "the first number to add"
-        "number2": "the second number to add"
+    {command.get_commands()}
 
     Use the commands only if needed (if you not sure about your answer).
     These commands are only for you and the User cant use these commands.
@@ -31,7 +24,7 @@ def run_pre_prompt() -> str:
     {
         "answer":"The answer you want to give",
         "command": {
-            "name": "command name",
+            "name": "the command you want to use",
             "args":{
                 "arg name": "value"
             }

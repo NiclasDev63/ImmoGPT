@@ -1,9 +1,10 @@
 import json
 import re
 import utils.make_request as make_request
+import tools.ImmoScoutScaper as ImmoScoutScaper
 
 
-def response_parser(response: str) -> json:
+def response_parser(response: str) -> dict:
     """
     Parses the response to get the answer and commands
 
@@ -11,7 +12,7 @@ def response_parser(response: str) -> json:
         response (str): The raw reponse from the API call
 
     Returns:
-        json: Valid json which includes the command and answer
+        dict: Valid json which includes the command and answer
 
     Raises:
         json.decoder.JSONDecodeError: If json can't get extracted from the response
@@ -24,6 +25,9 @@ def response_parser(response: str) -> json:
         response_json = json.loads(response)
     except json.decoder.JSONDecodeError:
         response_json = re.search(r'{.*}', response, re.DOTALL).group(0)
+        response_json = re.sub("\'", "\"", response_json)
+        response_json = re.sub("\s", " ", response_json)
+
 
         try:
             response_json = json.loads(response_json)
@@ -37,5 +41,8 @@ def response_parser(response: str) -> json:
             except json.decoder.JSONDecodeError:
                 print("Cant extract json from response")
 
-    if response_json != "":
-        return response_json
+    if response_json != "" and "command" in response_json:
+        command = response_json["command"]
+        if command == "ImmoScout":
+            immoscraper = ImmoScoutScaper(response_json)
+            immoscraper.scrapImmos()
