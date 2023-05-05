@@ -9,7 +9,7 @@ Since the ImmoScout24 API is unfortunately very expensive (at least the last tim
 1. run  ``` pip install -r requirements.txt ```
 2. Create a RapidAPI Account to get an API key which is needed to acces the GeoDB Cities API
 3. Set the RapidAPI API key as environment variable  
- Windows: ``` set X_RapidAPI_Key='yourkey' ```  
+ Windows: ``` setx X_RapidAPI_Key 'yourkey' ```  
  Linux / MacOS: ```echo "export X_RapidAPI_Key='yourkey'" >> ~/.zshrc```
 4. extract the cookie "reese84" from your browser, which is used to scrap https://www.immobilienscout24.de/
 5. paste the cookie in the following file ```./tools/ImmoScoutScraper.py``` as attribute ```self.reese84```
