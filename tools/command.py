@@ -9,7 +9,7 @@ def get_commands():
                 "acquisition_type": "buy or rent (MUST BE SPECIFIED)"
                 "minPrice": "the min price the User wants to pay (if specified)"
                 "maxPrice": "the max price the User wants to pay (if specified)"
-                "location": "only city the User is interested in (MUST BE SPECIFIED)"
+                "location": "only city the User is interested in (MUST BE SPECIFIED If not dont use this command and ask user for location)"
                 "radius" : "the radius around the location as integer (if specified)"
                 "minLivingSpace": "min size of house or apartment"
                 "maxLivingSpace": "max size of house or apartment"
@@ -33,7 +33,6 @@ def get_commands():
                 "squaremeter": "the size of the house or apartment"
                 "user_price": "the price the user pays or paid"
             }
-
 
     """
 

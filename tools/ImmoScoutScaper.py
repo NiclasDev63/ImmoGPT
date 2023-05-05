@@ -24,7 +24,7 @@ class ImmoScoutScraper:
         """
         self.reese84 = {
             "reese84": 
-            "3:AI8mSvkye03Vb2RPmgEkCQ==:IStxjIjK8msuQjCia3vyXNprZ79eITQ2HTaIR9YSG73xO+AWomLsXk20fouBxm54Ambegw5OSlWRYQ/hl+MRcg7ABIsLpNZqRj7VJHbSVRvyksCC0A+K0OXGbreJ5vMSe/w5boW9trpfKFVTqYuOTiOrx2SwMtpttMnO1PYdno/Tb3PlTW5bHLnhte/rOc5OQtGSExl7quqDezQlvqhgoiXVHeRhXQr8Hs9BZ8bLD1oBy/MAlpvczVibfNksGwEOkFpFAR4EUDJcqHtbRUKsF+VniAyyHeQFzI2Q4MDvJFPbts4H4A9h0peyIP4PyfpEdS2UFeLfc97SWP4wwQAlVcvoloFvSWb5I/JWggAu+mC1PqRDpVL9HHukXGW+ynvNwdhdHiU6pLl3LXYbONvAHOrp48DHfRqTC/uDtwzckepo+YAhG7T+VmC7Vl1qjHRPpUE7j4eXYc3Lanvv0f4EjX+kjy7Tvv5KZIaSDn6NL2Q254Y0e6m56vUOO43lhHffKapvHoC9TRg2skyhuG9EXrEBojISUJgIK/995sGCXyI=:ZsG6WHghKFsh56MHYYAhgCe8YZkkVTLYwf07B66hVb0="
+            "3:UYDmj0+E2diuvbAkyfg7hA==:gggeJmMF2Nw/su2rMh5wWuxzc/KLIy3nOVlwECw6TlW8k5YERz2ZQxU3Mk7EDl/WVVQMqJ/sIP34vH1n28dQpH/c82pUAwkg0opV8qkrbPX3pD1HCivn+j6bnGtge6bk2UqnbbzJCdKOJE3/fm8R/gUbT1KcJervc1ZJQfDWEiQQiNqBdPgEmKOGMWjQr+WKTkQ9VPiYM+1t0pUnEaoXv5LfFRg6r5dw07G+4l0vD8anyva3FE2VKJrGWYpg77KR0iMsaIDLCSXts2HaaISnYLfLekgba2tIBoHJcrd27bS9ALPpipKS0rkdk42rYtCztepSNRdBnFyOuPBLP5anqaeNJ9l/KX8QXy4ZIAJM5PwOPlG7AIxG7dgil3ztOtw8ap0WpnqWdCICtZvct5R+Ri93fOYaHt3JXcoqbbMkhZdWEOS84ujFQZbl3fp1nqk5QhSC2BHIilXmbYnDofyX22rYWBeMRmtgy8MC3CGXejQ=:xPwCpJ7Oo+b9IWUqfHoRlDEu5Bkn8I5weCypol3jdGM="
         }
 
         self.base_url = "https://www.immobilienscout24.de/Suche/radius/"
@@ -41,7 +41,37 @@ class ImmoScoutScraper:
         
         """
 
+        prompt = f"""
+            Parse the following JSON and return the first 10 results (or less if not that much are available) nicely formatted as a table
+
+            JSON WITH THE DATA:
+
+            {data}
+        
+        """
+
         return prompt
+    
+    def _print_search_params(self):
+        price_range = ""
+        if "minPrice" in self.data and self.data["minPrice"] != None:
+            price_range += str(self.data["minPrice"])
+        if "maxPrice" in self.data and self.data["maxPrice"] != None:
+            price_range += " to " + str(self.data["maxPrice"])
+        
+        squaremeter_temp = ""
+        if "minLivingSpace" in self.data and self.data["minLivingSpace"] != None:
+            squaremeter_temp += str(self.data["minLivingSpace"])
+        if "maxLivingSpace" in self.data and self.data["maxLivingSpace"] != None:
+            squaremeter_temp += " to " + str(self.data["maxLivingSpace"])
+        squaremeter = "" if squaremeter_temp == "" else "with " + squaremeter_temp + " squaremeters"
+
+        search_params = f"""
+        Looking for a property in {self.data['location']} within a price range 
+        of {price_range}€ {squaremeter}
+        """
+
+        print(search_params)
 
 
     def scrapImmos(self, search_data: dict):
@@ -50,6 +80,8 @@ class ImmoScoutScraper:
 
         self.data = search_data
         url = self._create_url()
+        print(url)
+        self._print_search_params()
         if url != -1:
             resp = requests.get(url, cookies=self.reese84, headers = random_agent.random_agent())
             if resp.status_code == 200:
@@ -199,6 +231,8 @@ class ImmoScoutScraper:
         except KeyError as e:
                 print("Can't parse ImmoScout results")
                 return -1
-        
+        if results_json[0] == {}: 
+            print("Couldn't find any results")
+            return -1
         return results_json
             

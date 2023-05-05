@@ -43,6 +43,9 @@ def response_parser(response: str) -> dict:
         print(response_json)
         command = response_json["command"]
         if command != None and "name" in command:
+            
+            if command["name"] == None or command["name"] == "": 
+                print(response_json["answer"])
 
             if command["name"] == "ImmoScout":
                 print("Using ImmouScout command")
