@@ -24,7 +24,7 @@ class ImmoScoutScraper:
         """
         self.reese84 = {
             "reese84": 
-            "3:Wk2vhfptOxkyIjlZG4F3hA==:lU/cjJov1AqtkN+i6zwl+4LLOpK8OwK2/MHAYvFjibXZTIYzYAUe4Q/GQR/L/Qv8+TLAiQKN7SJTN1KDUtP4ABFbAFGKMQxVpfMqlmKdXrOkO2GayeuatT2RaF7a1RYQhG7RFjd+ZibwtU3rGYeFYf2lmUSFE05OVr/WPrL0CFw1mrDUx9p0SKFpWvQbwI7o+om/bzKeJTphqF3zNSJAdAbpD6VXnXE8PCRbV/z6z3AxxgOD8cW/2/gc1mR2dNqgBOWN8/zAqFxo9wW9tQGwf5gHPtzgVmc3BwslNIvYHzlOaULHb9jhzjus6gE0QezOuokxOmAJgll9iQ9+jNBSwSkyMc4Afygg1v0LG2lwjvmUvb6vXJ3Z6DPpZ+4zeojb6Y2cx0c7KynnxnVjbouAPqwJD0byF7QoWXvrT1Vy1yBLNLslQH2UACw1PNwupHCYtVWYdf2qJqM7D0f4vWyBV2b9W878zi6NGz7khwFyyf9Jxp7TznK/rPJrhuYAHicefhpQ9613Rth3G/mRFPRWwQ==:YYJCRYSA5Ipo1SKYsLSq8mQquoPt80su9HZT2zhpoOI="
+            "3:iMhyIb5H8eSghVfoF2gswA==:tqFamMyfLDPiY7fUOnBp8VOgWhvlPHzBqQ+6ed87/1h8l36eCe5VaV2w+3S5Z/mOvB9LsZssQ/AXS9o/AjJOsfU+FsGNx1BTdHxs/+5s5qe/iTXYvbpIu4/Wsy/x3R6Wc2OWZtQWSQt9b6cyMWzxJ5VYUenGK3xA+lwvCyGvI8G+y+C96eEk82whptlRA0OXnqThw5AkAnd3DKivlrYa8jyqL/IadVrYzJEy3YepXz7cTvjbESFdZeZ+9sq02bHCmKFqkM7dG6PxpPb+aYxbrBlSyvwvPOPZtq2dq23fnoveqG8c8uZoQyQNTv3LbgUq/3cQEz3as3CbsbaVifGaVH8+PV8rDJk/jVipi/0bZISUojB5VvhdBJXvNeV+L6DBhJMFOa6RkppDveOaGsP5sUNByQZn5cc0FDcJ1X3kBEb2/afs8PwTbE6h50t43w8b9+a20ofh0JgLP8OdXj1nlDdW1rS4itEG3QIHUjSDHFi0cWSE9HA4kmIgE99Fu2ulNL7VxCb56UW/O/cnQyz+EA==:Umt6M/OHINPo1lpFulAIv8zeMj35dYJ1DJs9kfqZVoA="
         }
 
         self.base_url = "https://www.immobilienscout24.de/Suche/radius/"
@@ -32,8 +32,8 @@ class ImmoScoutScraper:
     
     def _prompt(self, data):
         prompt = f"""
-            The user has asked you about the best properties in {self.data["location"]} which you have now selected from ImmoScout24. The following list contains the data of the properties you have picked out in Json format, of which you now pick out 5 and give the user all the important data.
-            It is very Important, that you give the user the matching link.
+            The user has asked you about the best properties in {self.data["location"]} which you have now selected from ImmoScout24. The following list contains the data of the properties you have picked out in Json format, of which you now pick out 5 (if available) and give the user all the important data.
+            It is very Important, that you give the user the matching link and only select properties which are in the LIST WITH THE DATA.
 
             LIST WITH THE DATA:
 
@@ -128,7 +128,8 @@ class ImmoScoutScraper:
             if coords != -1:
 
                 radius = 1
-                if "radius" in self.data and self.data["radius"] != None and int(self.data["radius"]) > 1:
+                if "radius" in self.data and self.data["radius"] != None \
+                and self.data["radius"] != '' and int(self.data["radius"]) > 1:
                     radius = self.data["radius"]
 
                 return "geocoordinates=" + str(coords[0]) + ";" + str(coords[1]) + ";" + str(radius)
@@ -166,10 +167,15 @@ class ImmoScoutScraper:
     def _extract_results(self, resp: dict) -> list[dict]:
         
         """Parses the resultlist_json and extracts the important information"""
+
         try:
-            if resp['resultlistEntries'][0]["@numberOfHits"] == '0':
+            if resp == -1:
+                return -1
+            
+            if resp['paging']['numberOfHits'] == 0:
                 print("Unfortionatly there were no results, try changing your search parameters")
                 return -1
+            
             results_json = [{} for _ in resp['resultlistEntries'][0][u'resultlistEntry']]
             for idx, i in enumerate(resp['resultlistEntries'][0][u'resultlistEntry']):
                 if isinstance(i, dict):

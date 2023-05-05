@@ -17,7 +17,7 @@ def run_pre_prompt() -> str:
     Use the commands only if needed (if you not sure about your answer).
     These commands are only for you and the User cant use these commands.
 
-    From now on you only answer in JSON format, like the example below:
+    From now on you only answer in VALID JSON format, like the example below:
     """
 
     pre_prompt += r"""

@@ -30,7 +30,7 @@ def response_parser(response: str) -> dict:
 
         try:
             response_json = json.loads(response_json)
-        except json.decoder.JSONDecodeError:
+        except (json.decoder.JSONDecodeError, AttributeError) as e:
             # If nothing works, trying to get ChatGPT to parse the reponse
             prompt = f"Search for the two outer brackets in the following text \
             and only return the JSON within it including, the brackets: {response_json}"
@@ -40,7 +40,9 @@ def response_parser(response: str) -> dict:
             except json.decoder.JSONDecodeError:
                 print("Cant extract json from response")
 
-    if response_json != "" and "command" in response_json:
+                
+    print(response_json)
+    if isinstance(response_json, dict) and "command" in response_json:
         print(response_json)
         command = response_json["command"]
         if command != None and "name" in command:
