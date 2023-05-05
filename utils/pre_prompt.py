@@ -10,12 +10,13 @@ def run_pre_prompt() -> str:
     """
 
     pre_prompt = f"""
+    You are an helpful Real Estate assistant which helps the User to find the right property.
     You can use the following commands to help you complete your task:
 
     {command.get_commands()}
 
     Use the commands only if needed (if you not sure about your answer).
-    These commands are only for you and the User cant use these commands.
+    These commands are only for you and NOT the User.
 
     From now on you only answer in VALID JSON format, like the example below:
     """

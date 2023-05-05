@@ -24,13 +24,13 @@ class ImmoScoutScraper:
         """
         self.reese84 = {
             "reese84": 
-            "3:iMhyIb5H8eSghVfoF2gswA==:tqFamMyfLDPiY7fUOnBp8VOgWhvlPHzBqQ+6ed87/1h8l36eCe5VaV2w+3S5Z/mOvB9LsZssQ/AXS9o/AjJOsfU+FsGNx1BTdHxs/+5s5qe/iTXYvbpIu4/Wsy/x3R6Wc2OWZtQWSQt9b6cyMWzxJ5VYUenGK3xA+lwvCyGvI8G+y+C96eEk82whptlRA0OXnqThw5AkAnd3DKivlrYa8jyqL/IadVrYzJEy3YepXz7cTvjbESFdZeZ+9sq02bHCmKFqkM7dG6PxpPb+aYxbrBlSyvwvPOPZtq2dq23fnoveqG8c8uZoQyQNTv3LbgUq/3cQEz3as3CbsbaVifGaVH8+PV8rDJk/jVipi/0bZISUojB5VvhdBJXvNeV+L6DBhJMFOa6RkppDveOaGsP5sUNByQZn5cc0FDcJ1X3kBEb2/afs8PwTbE6h50t43w8b9+a20ofh0JgLP8OdXj1nlDdW1rS4itEG3QIHUjSDHFi0cWSE9HA4kmIgE99Fu2ulNL7VxCb56UW/O/cnQyz+EA==:Umt6M/OHINPo1lpFulAIv8zeMj35dYJ1DJs9kfqZVoA="
+            "3:AI8mSvkye03Vb2RPmgEkCQ==:IStxjIjK8msuQjCia3vyXNprZ79eITQ2HTaIR9YSG73xO+AWomLsXk20fouBxm54Ambegw5OSlWRYQ/hl+MRcg7ABIsLpNZqRj7VJHbSVRvyksCC0A+K0OXGbreJ5vMSe/w5boW9trpfKFVTqYuOTiOrx2SwMtpttMnO1PYdno/Tb3PlTW5bHLnhte/rOc5OQtGSExl7quqDezQlvqhgoiXVHeRhXQr8Hs9BZ8bLD1oBy/MAlpvczVibfNksGwEOkFpFAR4EUDJcqHtbRUKsF+VniAyyHeQFzI2Q4MDvJFPbts4H4A9h0peyIP4PyfpEdS2UFeLfc97SWP4wwQAlVcvoloFvSWb5I/JWggAu+mC1PqRDpVL9HHukXGW+ynvNwdhdHiU6pLl3LXYbONvAHOrp48DHfRqTC/uDtwzckepo+YAhG7T+VmC7Vl1qjHRPpUE7j4eXYc3Lanvv0f4EjX+kjy7Tvv5KZIaSDn6NL2Q254Y0e6m56vUOO43lhHffKapvHoC9TRg2skyhuG9EXrEBojISUJgIK/995sGCXyI=:ZsG6WHghKFsh56MHYYAhgCe8YZkkVTLYwf07B66hVb0="
         }
 
         self.base_url = "https://www.immobilienscout24.de/Suche/radius/"
 
     
-    def _prompt(self, data):
+    def _prompt(self, data: list[dict]):
         prompt = f"""
             The user has asked you about the best properties in {self.data["location"]} which you have now selected from ImmoScout24. The following list contains the data of the properties you have picked out in Json format, of which you now pick out 5 (if available) and give the user all the important data.
             It is very Important, that you give the user the matching link and only select properties which are in the LIST WITH THE DATA.
@@ -44,7 +44,7 @@ class ImmoScoutScraper:
         return prompt
 
 
-    def scrapImmos(self, search_data):
+    def scrapImmos(self, search_data: dict):
 
         """Searches for properties with the desired parameters"""
 
@@ -62,7 +62,7 @@ class ImmoScoutScraper:
                 print("Can't reach ImmoScout")
 
 
-    def _create_url(self) -> str:
+    def _create_url(self) -> str or int:
 
         """Creates an Immoscout24 link with the desired parameters"""
 
@@ -97,11 +97,11 @@ class ImmoScoutScraper:
 
         url = ""
 
-        if "type" not in self.data or self.data["type"] == None: 
+        if "acquisition_type" not in self.data or self.data["acquisition_type"] == None: 
             print("Can't parse type from json")
             return -1
         
-        elif self.data["type"] == "rent": url += "wohnung-mieten?"
+        elif self.data["acquisition_type"] == "rent": url += "wohnung-mieten?"
         else: url += "wohnung-kaufen?"
 
         url += "price="
@@ -119,7 +119,7 @@ class ImmoScoutScraper:
         return url
 
     
-    def _extract_coords(self) -> str:
+    def _extract_coords(self) -> str or int:
         
         """Converts the desired location into url format"""
 
@@ -139,7 +139,7 @@ class ImmoScoutScraper:
             return -1
         
         
-    def _html_parser(self, soup: BeautifulSoup) -> dict:
+    def _html_parser(self, soup: BeautifulSoup) -> dict or int:
         
         """Parses the html to get the results"""
 
@@ -164,7 +164,7 @@ class ImmoScoutScraper:
                 return -1
     
 
-    def _extract_results(self, resp: dict) -> list[dict]:
+    def _extract_results(self, resp: dict) -> list[dict] or int:
         
         """Parses the resultlist_json and extracts the important information"""
 

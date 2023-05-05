@@ -2,6 +2,7 @@ import json
 import re
 import utils.call_AI as call_AI
 import tools.ImmoScoutScaper as ImmoScoutScaper
+import utils.get_avg_buy_rent_price as get_avg_buy_rent_price
 
 
 def response_parser(response: str) -> dict:
@@ -18,17 +19,14 @@ def response_parser(response: str) -> dict:
         json.decoder.JSONDecodeError: If json can't get extracted from the response
     """
 
-
     response_json = ""
 
     try:
         response_json = json.loads(response)
     except json.decoder.JSONDecodeError:
-        response_json = re.search(r'{.*}', response, re.DOTALL).group(0)
-        response_json = re.sub("\s", " ", response_json)
-
-
         try:
+            response_json = re.search(r'{.*}', response, re.DOTALL).group(0)
+            response_json = re.sub("\s", " ", response_json)
             response_json = json.loads(response_json)
         except (json.decoder.JSONDecodeError, AttributeError) as e:
             # If nothing works, trying to get ChatGPT to parse the reponse
@@ -40,12 +38,17 @@ def response_parser(response: str) -> dict:
             except json.decoder.JSONDecodeError:
                 print("Cant extract json from response")
 
-                
-    print(response_json)
+    print(response)           
     if isinstance(response_json, dict) and "command" in response_json:
         print(response_json)
         command = response_json["command"]
         if command != None and "name" in command:
+
             if command["name"] == "ImmoScout":
+                print("Using ImmouScout command")
                 immoscraper = ImmoScoutScaper.ImmoScoutScraper()
                 immoscraper.scrapImmos(command["args"])
+
+            if command["name"] == "averagePrice":
+                print("Using averagePrice command")
+                get_avg_buy_rent_price.get_price(command["args"])
