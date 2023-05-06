@@ -11,7 +11,7 @@ class ImmoScoutScraper:
     A class that searches ImmoScout for suitable properties
 
     Attributes:
-        search_data (dict): Dict which contains the important information for the search
+        search_data (dict): Dict which contains the imporltant information for the search
 
     """
 
@@ -24,7 +24,7 @@ class ImmoScoutScraper:
         """
         self.reese84 = {
             "reese84": 
-            "3:KDR/Uqx9NsX3nMs9Nrn7Ow==:GvMA58fQkCth4mGoeejb1xz/euYVXtHIJSj62XrK86JMYqoR+t6LfLFyoqTCSCWoHxmPiRwR3k/veTN8flLP0iS/DIPJEnNfIuWk6FvxX96sThbIZwf++kW21yPGrKE2UsbtehRoyZ3rngL48uIH1Ew/HjJZoNljkPn5mhpiLkypZVEB1IMYEQLql2P0J8VUEj7zGDmYb23M/LW/llVHfZRW4LPAVD3DDqXB20L3V1jryyDMBVEGZIYZWzQg4djJgOrxpZtJF4+cjyPYYbg7nEEq9VLKcrgrzX+ZwqJekuasKbOb8lfjtWJ5q03usgCfai/Uemlcce3Q5p/CjbuTKLUBp+K+0xwImZGYlGJ8Bx5ClKakcdlXmxZg78/ogtnBKlnPwxzkWfYiP3b9eeliGOraDN2fzBpUhyIIjd8HlZa3SHCUQLSulXNbjmT82o605RKsx/l418NEGWirEthXTw==:I0Ccp3vFgDy67L4Z9MqXsHUvVm1Ott5FHVm0N8iGxVM="
+            "3:qBhzgO+BvjN7cZoU3MwM/A==:xFSsyJ7gv3/W4pBbc774uDGnuk8L5Ob80BhNIsBreOLEZ/wGhdRTlTno5ZESnxzOuwKK7LFHmADZHOVENpkggmy+EV7anRPPGDSctwSibQwuD1VldEVsYmxDuK+gGGRNV94mpgUVvOA4sNIAYsDWVVVPhxmwv57p6JjN5YZuCdZy8/xePqWI5hx6f4km0OY/SEPi9zFJaFz/BTGkH5+JXxqoO+QrxwBB/LsTY+hZLQ98/rIdNtWLyKwYXBsPlZlI/LWpXioWGr8Ohm3ukx3Mamcs3EZ9EoAuo/LdwG2LHlxkIWzOwXE70ooB28WSpv34a7DMKS5GmjgEvZgqtNK6wiMmWAHAYjzA9EZsaggpuwFq3rC3UbDhLIvrplvMkMQHGIWG1vWANH4sgqLMphkdFPWG5KHOFMfj82HYpQRRDcW6y0o2z5MDfiBkprNL091gzNZgldddsHPq6orWkSLQqOLMV9jicNHFiphurbhMO08=:NTsI45WnDExJafl36Zy48Md99zu0/XYntNqSPPRntCM="
         }
 
         self.base_url = "https://www.immobilienscout24.de/Suche/radius/"

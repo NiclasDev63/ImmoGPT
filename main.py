@@ -12,7 +12,7 @@ import utils.call_AI as call_AI
         resp_json = response_parser.response_parser(resp)
         print(chats) """
 
+prompt = pre_prompt.run_pre_prompt()
 
-prompt = [{"role": "system", "content": pre_prompt.run_pre_prompt()}]
-prompt.append[{"role": "user", "content": input("User: ")}]
 resp = call_AI.make_request(prompt)
+resp = response_parser.response_parser(resp)

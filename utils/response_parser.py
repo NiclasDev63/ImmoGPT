@@ -32,7 +32,7 @@ def response_parser(response: str) -> dict:
                 response_json = json.loads(response_json)
             else:
                 response_json = _get_json_from_ai(response_json)
-
+    print(response)
     if isinstance(response_json, dict) and "command" in response_json:
         print(response_json)
         command = response_json["command"]
@@ -63,6 +63,7 @@ def _get_json_from_ai(bad_json: str) -> str or int:
         return -1
 
 def _get_json_from_response(response: str) -> Tuple[str, str]:
+    response_json = response
     try:
         response_json = re.search(r'{.*}', response, re.DOTALL).group(0)
         response_json = re.sub("\s", " ", response_json)
