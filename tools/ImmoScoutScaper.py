@@ -24,7 +24,7 @@ class ImmoScoutScraper:
         """
         self.reese84 = {
             "reese84": 
-            "3:UYDmj0+E2diuvbAkyfg7hA==:gggeJmMF2Nw/su2rMh5wWuxzc/KLIy3nOVlwECw6TlW8k5YERz2ZQxU3Mk7EDl/WVVQMqJ/sIP34vH1n28dQpH/c82pUAwkg0opV8qkrbPX3pD1HCivn+j6bnGtge6bk2UqnbbzJCdKOJE3/fm8R/gUbT1KcJervc1ZJQfDWEiQQiNqBdPgEmKOGMWjQr+WKTkQ9VPiYM+1t0pUnEaoXv5LfFRg6r5dw07G+4l0vD8anyva3FE2VKJrGWYpg77KR0iMsaIDLCSXts2HaaISnYLfLekgba2tIBoHJcrd27bS9ALPpipKS0rkdk42rYtCztepSNRdBnFyOuPBLP5anqaeNJ9l/KX8QXy4ZIAJM5PwOPlG7AIxG7dgil3ztOtw8ap0WpnqWdCICtZvct5R+Ri93fOYaHt3JXcoqbbMkhZdWEOS84ujFQZbl3fp1nqk5QhSC2BHIilXmbYnDofyX22rYWBeMRmtgy8MC3CGXejQ=:xPwCpJ7Oo+b9IWUqfHoRlDEu5Bkn8I5weCypol3jdGM="
+            "3:KDR/Uqx9NsX3nMs9Nrn7Ow==:GvMA58fQkCth4mGoeejb1xz/euYVXtHIJSj62XrK86JMYqoR+t6LfLFyoqTCSCWoHxmPiRwR3k/veTN8flLP0iS/DIPJEnNfIuWk6FvxX96sThbIZwf++kW21yPGrKE2UsbtehRoyZ3rngL48uIH1Ew/HjJZoNljkPn5mhpiLkypZVEB1IMYEQLql2P0J8VUEj7zGDmYb23M/LW/llVHfZRW4LPAVD3DDqXB20L3V1jryyDMBVEGZIYZWzQg4djJgOrxpZtJF4+cjyPYYbg7nEEq9VLKcrgrzX+ZwqJekuasKbOb8lfjtWJ5q03usgCfai/Uemlcce3Q5p/CjbuTKLUBp+K+0xwImZGYlGJ8Bx5ClKakcdlXmxZg78/ogtnBKlnPwxzkWfYiP3b9eeliGOraDN2fzBpUhyIIjd8HlZa3SHCUQLSulXNbjmT82o605RKsx/l418NEGWirEthXTw==:I0Ccp3vFgDy67L4Z9MqXsHUvVm1Ott5FHVm0N8iGxVM="
         }
 
         self.base_url = "https://www.immobilienscout24.de/Suche/radius/"

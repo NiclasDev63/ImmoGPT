@@ -19,6 +19,8 @@ def run_pre_prompt() -> str:
     These commands are only for you and NOT the User.
 
     From now on you only answer in VALID JSON format, like the example below:
+
+    RESPONSE FORMAT:
     """
 
     pre_prompt += r"""
@@ -33,4 +35,4 @@ def run_pre_prompt() -> str:
     }
     """
 
-    return pre_prompt + "\nUser: " + input("User: ")
+    return pre_prompt  #+ "\nUser: " + input("User: ")
