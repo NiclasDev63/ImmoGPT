@@ -7,7 +7,7 @@ class Memory:
     
     @classmethod
     def add(cls, chatlog: dict):
-        """Max memory size is 10 entries"""
+        """max memory size is 10 entries"""
         
         if not isinstance(chatlog, dict):
             raise TypeError("chatlog has to be of type dict")

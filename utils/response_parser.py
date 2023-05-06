@@ -53,11 +53,10 @@ def response_parser(response: str) -> dict:
 
 def _get_json_from_ai(bad_json: str) -> str or int:
     # If nothing works, trying to get ChatGPT to parse the reponse
-    prompt = f"Search for the two outer brackets in the following text \
-    and only return the JSON within it including, the brackets: {bad_json}"
+    prompt = f"Fix the following invalid JSON and only return the correct JSON without any other information: {bad_json}"
     try:
-        response_json = json.loads(call_AI.make_request(prompt))
-        return response_json
+        response_json = call_AI.make_request(prompt)
+        return json.loads(_get_json_from_response(response_json))
     except json.decoder.JSONDecodeError:
         print("Cant extract json from response")
         return -1

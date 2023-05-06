@@ -20,7 +20,7 @@ def get_commands():
 
     3. "averagePrice": "Helpful to find out if a purchase or rental price is appropriate"s
         "args":{
-            "address": "<address of property>"
+            "location": "<location of property>"
              "acquisition_type": "<acquisition_type>"
             "squaremeter": "<squaremeter>"
         }
