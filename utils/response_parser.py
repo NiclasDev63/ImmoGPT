@@ -54,7 +54,7 @@ def response_parser(response: str) -> dict:
 def _get_json_from_ai(bad_json: str) -> str or int:
     # If nothing works, trying to get ChatGPT to parse the reponse
     prompt = f"Search for the two outer brackets in the following text \
-    and only return the JSON within it including, the brackets: {response_json}"
+    and only return the JSON within it including, the brackets: {bad_json}"
     try:
         response_json = json.loads(call_AI.make_request(prompt))
         return response_json
