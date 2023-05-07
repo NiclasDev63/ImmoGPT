@@ -4,6 +4,7 @@ import utils.call_AI as call_AI
 import tools.ImmoScoutScaper as ImmoScoutScaper
 import utils.get_avg_buy_rent_price as get_avg_buy_rent_price
 from typing import Tuple
+import tools.memory as memory
 
 def response_parser(response: str) -> dict:
     """
@@ -21,32 +22,38 @@ def response_parser(response: str) -> dict:
 
     response_json = ""
 
+    print("DATA", response)
+
     try:
         response_json = json.loads(response)
     except json.decoder.JSONDecodeError:
         response_json, e = _get_json_from_response(response)
         if e == '0': response_json = json.loads(response_json)
         else:
-            response_json = _add_quotes_to_property_and_value(response_json, e)
-            if _is_valid_json(response_json):
-                response_json = json.loads(response_json)
-            else:
-                response_json = _get_json_from_ai(response_json)
-    print(response)
+            if e.startswith("Expecting property name enclosed in double quotes") or \
+                    e.startswith("Expecting value"):
+                response_json = _add_quotes_to_property_and_value(response_json, e)
+                if _is_valid_json(response_json):
+                    response_json = json.loads(response_json)
+                else:
+                    response_json = _get_json_from_ai(response_json)
+
+
     if isinstance(response_json, dict) and "command" in response_json:
-        print(response_json)
+        #print(response_json)
         command = response_json["command"]
         if command != None and "name" in command:
             
             if command["name"] == None or command["name"] == "": 
                 print(response_json["answer"])
+                memory.Memory.add({"role":"assistant", "content": response_json["answer"]})
 
-            if command["name"] == "ImmoScout":
+            elif command["name"] == "ImmoScout":
                 print("Using ImmouScout command")
                 immoscraper = ImmoScoutScaper.ImmoScoutScraper()
                 immoscraper.scrapImmos(command["args"])
 
-            if command["name"] == "averagePrice":
+            elif command["name"] == "averagePrice":
                 print("Using averagePrice command")
                 get_avg_buy_rent_price.get_price(command["args"])
 

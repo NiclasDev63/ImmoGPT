@@ -6,6 +6,19 @@ class Memory:
         return cls.memory
     
     @classmethod
+    def get_latest_task(cls) -> str:
+        for i in reversed(cls.memory):
+            if i["role"] == "user":
+                return i["content"]
+    
+    @classmethod
+    def get_mem_as_str(cls) -> str:
+        mem = ""
+        for i in cls.memory:
+            mem += i["content"]
+        return mem
+    
+    @classmethod
     def add(cls, chatlog: dict):
         """max memory size is 10 entries"""
         

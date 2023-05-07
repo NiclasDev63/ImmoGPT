@@ -32,4 +32,4 @@ def run_pre_prompt() -> str:
     }
     """
 
-    return pre_prompt + "\nUser: " + input("User: ")
+    return pre_prompt # + "\nUser: " + input("User: ")

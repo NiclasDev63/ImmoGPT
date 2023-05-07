@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import utils.get_random_agent as get_random_agent
 import utils.call_AI as call_AI
+import tools.memory as memory
 
 def get_price(data: dict) -> None or int:
 
@@ -14,8 +15,8 @@ def get_price(data: dict) -> None or int:
     acquisition_type = ""
     squaremeter = 0
 
-    if "address" in data and data["address"] != None:
-        address = data["address"]
+    if "location" in data and data["location"] != None:
+        address = data["location"]
 
     if "acquisition_type" in data and data["acquisition_type"] != None:
         acquisition_type = data["acquisition_type"]
@@ -47,13 +48,14 @@ def get_price(data: dict) -> None or int:
 
         res = re.split("\s", price_as_str)[1]
 
-        if acquisition_type == "sell": res = res.replace(".", "")
+        if acquisition_type == "sell": res = int(res.replace(".", ""))
         
         else: res = int(res.split(".")[0]) + int(res.split(".")[1]) * 0.1
 
         avg_price = res * squaremeter
 
-        print(call_AI.make_request(_prompt(avg_price, acquisition_type, address, squaremeter)))
+        resp = call_AI.make_request(_prompt(avg_price, acquisition_type, address, squaremeter))
+        memory.Memory.add({"role":"assistant", "content": resp})
     
     else:
         print("Can't reach homeday to get average price")
@@ -68,6 +70,6 @@ def _prompt(avg_price: float, acquisition_type: str, address: str, squaremeter: 
     squaremeter:<{squaremeter}> 
     address:<{address}>
     """
-
+    memory.Memory.add({"role":"system", "content": prompt})
     return prompt
     

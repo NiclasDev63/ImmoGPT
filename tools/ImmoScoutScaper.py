@@ -5,6 +5,7 @@ import utils.call_AI as call_AI
 import json
 import requests
 from datetime import datetime
+import tools.memory as memory
 
 class ImmoScoutScraper:
     """
@@ -24,7 +25,7 @@ class ImmoScoutScraper:
         """
         self.reese84 = {
             "reese84": 
-            "3:qBhzgO+BvjN7cZoU3MwM/A==:xFSsyJ7gv3/W4pBbc774uDGnuk8L5Ob80BhNIsBreOLEZ/wGhdRTlTno5ZESnxzOuwKK7LFHmADZHOVENpkggmy+EV7anRPPGDSctwSibQwuD1VldEVsYmxDuK+gGGRNV94mpgUVvOA4sNIAYsDWVVVPhxmwv57p6JjN5YZuCdZy8/xePqWI5hx6f4km0OY/SEPi9zFJaFz/BTGkH5+JXxqoO+QrxwBB/LsTY+hZLQ98/rIdNtWLyKwYXBsPlZlI/LWpXioWGr8Ohm3ukx3Mamcs3EZ9EoAuo/LdwG2LHlxkIWzOwXE70ooB28WSpv34a7DMKS5GmjgEvZgqtNK6wiMmWAHAYjzA9EZsaggpuwFq3rC3UbDhLIvrplvMkMQHGIWG1vWANH4sgqLMphkdFPWG5KHOFMfj82HYpQRRDcW6y0o2z5MDfiBkprNL091gzNZgldddsHPq6orWkSLQqOLMV9jicNHFiphurbhMO08=:NTsI45WnDExJafl36Zy48Md99zu0/XYntNqSPPRntCM="
+            "3:G5Bi4THkR7uCw8I2E64pJg==:SOX2y1OoDuK7s15MhWvgylm7IVUUqsBlUJY/yHHk74gLYhMfyXQOsyTyP9jt9lIH80jYgqgIJz8IMOtzE2y/dTdWrCrtrg5AZHk6+OjL9czr+I7g9zUtbY0+/0KUMFUkmOsT7YQv/jzPeVHTeMgchfRHLEeceTCuiHJ/upwQoxCdNz+MDvytOyH57h02nwm0IWcHqUMedci0nnJfp54iFRjWIAqJB2t9jfM8dJ+Y+mun3eiiMvu98rZsil2UQ1bbPirThBu/fyMCYHO1ubGbFU6j+G+ZQNyolSIbEKpyQoT92jU1xcQIhbEZZaR0xRDxQmnYE8WHgS+fyvR+SDb7K6BGni8dYb43/fzGPEwKsdHoJCDyVPoEQleP+H3LVIuFAMqZ5z4QZ8UbMU0YdBqLHKCHVaGheBm7thMthYfu4oVImR20bnldYsNbesDnYLMIEBzUYSp/Zi9mFRYoEWXzjRnuKwZVDnViGqPxSM2mmuM=:tbCY841hs8OlDx5Z8BgN38x4mQjbiZBC9/OwZUg4upI="
         }
 
         self.base_url = "https://www.immobilienscout24.de/Suche/radius/"
@@ -49,6 +50,7 @@ class ImmoScoutScraper:
             {data}
         
         """
+        memory.Memory.add({"role":"system", "content": prompt})
 
         return prompt
     
@@ -80,7 +82,6 @@ class ImmoScoutScraper:
 
         self.data = search_data
         url = self._create_url()
-        print(url)
         self._print_search_params()
         if url != -1:
             resp = requests.get(url, cookies=self.reese84, headers = random_agent.random_agent())
@@ -88,7 +89,9 @@ class ImmoScoutScraper:
                 soup = BeautifulSoup(resp.content, 'html.parser')
                 data_list_of_dic = self._extract_results(self._html_parser(soup))
                 if data_list_of_dic != -1:
-                    print(call_AI.make_request(self._prompt(data_list_of_dic)))
+                    resp = call_AI.make_request(self._prompt(data_list_of_dic))
+                    memory.Memory.add({"role":"assistant", "content": resp})
+                    print(resp)
 
             else: 
                 print("Can't reach ImmoScout")
@@ -161,8 +164,12 @@ class ImmoScoutScraper:
 
                 radius = 1
                 if "radius" in self.data and self.data["radius"] != None \
-                and self.data["radius"] != '' and int(self.data["radius"]) > 1:
-                    radius = self.data["radius"]
+                    and self.data["radius"] != '':
+                    try:
+                        if int(self.data["radius"]) > 1:
+                            radius = self.data["radius"]
+                    except ValueError:
+                        None
 
                 return "geocoordinates=" + str(coords[0]) + ";" + str(coords[1]) + ";" + str(radius)
             else: return -1

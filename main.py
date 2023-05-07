@@ -1,6 +1,7 @@
 import utils.pre_prompt as pre_prompt
 import utils.response_parser as response_parser
 import utils.call_AI as call_AI
+import tools.memory as memory
 
 
 """ if __name__ == "__main__":
@@ -12,7 +13,12 @@ import utils.call_AI as call_AI
         resp_json = response_parser.response_parser(resp)
         print(chats) """
 
-prompt = pre_prompt.run_pre_prompt()
+if __name__ == "__main__":
+    prompt = pre_prompt.run_pre_prompt()
 
-resp = call_AI.make_request(prompt)
-resp = response_parser.response_parser(resp)
+    while 1:
+        memory.Memory.add({"role":"system", "content": prompt})
+        memory.Memory.add({"role":"user", "content": input("User: ")})
+        #print("MEMORY OUTPUT: ", memory.Memory.get_mem_as_str())
+        resp = call_AI.make_request(memory.Memory.get_mem_as_str())
+        resp = response_parser.response_parser(resp)
