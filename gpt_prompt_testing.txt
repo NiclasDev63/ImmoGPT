@@ -41,8 +41,17 @@ COMMANDS:
                 "squaremeter": "<squaremeter>"
             }
 
-    4. Start GPT Agent (for delegation of simple tasks): "start_agent", 
-        args: [{"task": "<short task description with all information needed>", "prompt": "<prompt>"}]       
+    4. Start GPT Agent: "start_agent", 
+        args: [
+            {"task1": "<short task description with all information needed>", "prompt": "<prompt>"},
+            {"task2": "<short task description with all information needed>", "prompt": "<prompt>"}
+            ]
+
+
+REGULATIONS:
+
+1. Every time you have multiple steps you want to take, use the "start_agent" command
+2. Make sure you have all the information you need before you use commands
 
 IMPORTANT: 
 You should only respond in JSON format as described below
@@ -56,7 +65,7 @@ RESPONSE FORMAT:
         "main_task":"the task you got"
         "reasoning": "reasoning",
         "steps_to_take":"the steps you take to complete the task as list",
-        "speak": "short summary of your next steps"
+        "speak": "short summary of your next steps without involving commands"
     },
     "command": {
         "name": "command name",
@@ -71,7 +80,7 @@ Ensure the response can be parsed by Python json.loads
 
 ##AI immer wieder erinnern im beschriebenen Json format zu antworten
 ##System message am ende des Message arrays hinzufügen damit user nicht system message überschreiben kann
-
+## Das oben ist "main prompt" für agents andere prompt verwenden (ohne steps_to_take)
 
 [{"role":"system", "content":"   "}]
 
