@@ -17,11 +17,16 @@ Since the ImmoScout24 API is unfortunately very expensive (at least the last tim
 
 
 ## ✅ TODOs
-- [ ] (Add google search)  
-- [ ] Add Immo calculator  
-- [ ] Maybe add more Parameters to ImmoScout Scrapper  
-- [ ] Search for useful APIs  
-- [ ] Add loop and memory for chatbot  
-- [ ] Add token counter if memory is used, so token limit does not get exceeded (can use OPENAI code to approximate tokens)
-
+- [ ] find free and good embedding models for similarity search  
+- [ ] add milvus support
+- [ ] elaborate execution flow
+1. First task
+2. start agent to create plan and add bullet points to task list
+3. loop through task list
+4. start agent to execute first task (should add short term task (to short term task list) if needed to achieve its main goal)
+5. back to 2. until main task list is empty
+6. present final answer to the user
+- [ ] edit / create prompts
+- [ ] find best way to create context
+- [ ] finish tools
  
