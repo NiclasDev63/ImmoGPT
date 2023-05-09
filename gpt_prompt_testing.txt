@@ -21,8 +21,8 @@ COMMANDS:
                 }
 
     2. Property Analyzation: "analyze_immo":, 
-        args:{ [
-                {"property_n":
+        args:[
+                {"property_1":
                     {"link": "ImmoScout24 link (use this if available)"} OR
                     {
                     "acquisition_type": "<acquisition_type of property>",
@@ -32,7 +32,7 @@ COMMANDS:
                     }
                 }
                 ]
-            }
+            
 
     3. Calculate average property price in Area: "average_price",
         args:{
@@ -40,18 +40,15 @@ COMMANDS:
                 "acquisition_type": "<acquisition_type>"
                 "squaremeter": "<squaremeter>"
             }
+        description:"
 
-    4. Start GPT Agent: "start_agent", 
-        args: [
-            {"task1": "<short task description with all information needed>", "prompt": "<prompt>"},
-            {"task2": "<short task description with all information needed>", "prompt": "<prompt>"}
-            ]
-
+    4. Task Complete (Shutdown): "task_complete", args: "reason": "<reason>", description: "use this, if you finished your main task"
 
 REGULATIONS:
 
-1. Every time you have multiple steps you want to take, use the "start_agent" command
-2. Make sure you have all the information you need before you use commands
+1. If your plan consists of several steps, divide it up appropriately but only if needed
+2. Make sure you have all the information you need before you start with your plan
+3. Mark the task as complete as soon as you finished your initial main task
 
 IMPORTANT: 
 You should only respond in JSON format as described below
@@ -62,16 +59,10 @@ RESPONSE FORMAT:
     "conversation":
     {
         "thought": "thoughts",
-        "main_task":"the task you got"
+        "main_task":"the main task you have"
         "reasoning": "reasoning",
-        "steps_to_take":"the steps you take to complete the task as list",
-        "speak": "short summary of your next steps without involving commands"
-    },
-    "command": {
-        "name": "command name",
-        "args":{
-            "arg_name": "value"
-        }
+        "plan":"- short bulleted\n- list that conveys\n- long-term plan",
+        "speak": "your final answer if you finished your task else null"
     }
 }
 
@@ -87,8 +78,7 @@ Ensure the response can be parsed by Python json.loads
 Prompts:
 1. [{"role":"user", "content":"I am interested in buying an apartment in Frankfurt am Main for a max of 1mio€ and a min of 30sqm"}]
 
-2. You have calculated the following numbers to completet your task which you can now present the user :
-task: "Further analyze property 1 and 2 of your results"
+2. You have calculated the following numbers :
 Property 1:
 Bruttomietrendite: 8%
 Nettomietrendite: 6%
@@ -99,8 +89,13 @@ Bruttomietrendite: 12%
 Nettomietrendite: 1%
 Preis pro quadratmeter: 28€
 
+Property 3:
+Bruttomietrendite: 12%
+Nettomietrendite: 1%
+Preis pro quadratmeter: 28€
+
 Answers:
-1. [{"role":"system", "content":"You have found the following propertys, and can now present them the user: [
+1. [{"role":"system", "content":"You have found the following propertys: [
   {
     "address": "Sachsenhausen-Nord, Frankfurt am Main",
     "Square_Meter": 74.7,
@@ -133,14 +128,14 @@ Answers:
 2. You have searched the internet for the average price to <acquisition_type> a property in <location> with <squaremeter> sqm and can now give the user this information:
 average price: <average_price>
 
-| Address                                 | Square Meter | Immo ID   | Price    | Number of Rooms | Publish Date                 | Link                                               |
-|-----------------------------------------|--------------|-----------|----------|-----------------|----------------------------|----------------------------------------------------|
-| Sachsenhausen-Nord, Frankfurt am Main   | 74.7         | 127849346 | 778100   | 3               | 29. September 2021, 13:36 Uhr | https://www.immobilienscout24.de/127849346         |
-| Innenstadt, Frankfurt am Main           | 70           | 140426994 | 545000   | 2               | 08. March 2023, 17:28 Uhr     | https://www.immobilienscout24.de/140426994         |
-| Ostend, Frankfurt am Main               | 76           | 141800688 | 595000   | 3               | 28. March 2023, 19:28 Uhr
+Main CONTEXT:
+1. Pre Prompt (only while starting the agent)
 
+2. Previous Task: 
+Use the 'search_immo' command with 'acquisition_type' as 'buy', 'max_price' as '1000000', and 'location' as 'Frankfurt am Main'.
 
-[
+3. Result of Previous Task: 
+You have found the following propertys: [
   {
     "address": "Sachsenhausen-Nord, Frankfurt am Main",
     "Square_Meter": 74.7,
@@ -148,7 +143,7 @@ average price: <average_price>
     "Price": 778100,
     "Number_of_Rooms": 3,
     "Publish_Date": "29. September 2021, 13:36 Uhr",
-    "Link": "https://www.immobilienscout24.d/127849346"
+    "Link": "https://www.immobilienscout24.de/127849346"
   },
   {
     "address": "Innenstadt, Frankfurt am Main",
@@ -169,3 +164,77 @@ average price: <average_price>
     "Link": "https://www.immobilienscout24.de/141800688"
   }
 ]
+
+4. Next Task: 
+Select a suitable apartment from the search results based on the provided criteria.
+
+
+Prompt for Sub Agents:
+
+Pre Prompt (only while starting the agent)
+
+main task:
+<the current main task>
+
+REGULATIONS:
+
+1. Make sure you have all the information you need before you start with your plan
+2. Use the "task_complete" command as soon as you finished your initial main task
+3. You are not allowed to change your main task
+
+IMPORTANT: 
+You should only respond in JSON format as described below
+
+RESPONSE FORMAT:
+
+{
+    "conversation":
+    {
+        "thought": "thoughts",
+        "main_task":"the main task you have"
+        "reasoning": "reasoning",
+        "missing_information":"information you need to complete the task",
+        "speak": "short summary of the missing information"
+    },
+    "commands": {
+        "name": "command name",
+        "args":{
+            "arg_name": "value"
+        }
+    }
+}
+
+Ensure the response can be parsed by Python json.loads
+
+User answer (if needed):
+User answer
+
+main task:
+Ask the user for their desired acquisition type and location
+
+IMPORTANT: 
+You should only respond in JSON format as described below
+
+RESPONSE FORMAT:
+
+{
+    "conversation":
+    {
+        "thought": "thoughts",
+        "main_task":"the main task you have"
+        "reasoning": "reasoning",
+        "missing_information":"information you need to complete the task",
+        "speak": "short summary of the missing information"
+    },
+    "commands": {
+        "name": "command name",
+        "args":{
+            "arg_name": "value"
+        }
+    }
+}
+
+Ensure the response can be parsed by Python json.loads
+
+
+User: "I want to buy an apartment in Frankfurt am Main"
