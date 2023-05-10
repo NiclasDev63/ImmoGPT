@@ -5,25 +5,31 @@ INITIALIZATION
 
 3. Regulations
 
-4. Main task
+4. Result of last Sub Agent (if available)
+
+5. Main task
 
 
 STANDARD PROMPT (If needed)
-1. Response format
+1. Temp Chat log of current Sub Agent and User
 
-2. Regulations
+2. Response format
 
-3. Main task
+3. Regulations
 
-4. User Input (e.g. missing information)
+4. Main task
+
+5. User Input (e.g. missing information)
 
 
 FINAL PROMPT
-1. Response format
+1. Temp Chat log of current Sub Agent and User
 
-2. Regulations
+2. Response format
 
-3. Main task
+3. Regulations
+
+4. Main task
 
 
 IMPORTANT: 
