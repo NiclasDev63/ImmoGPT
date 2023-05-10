@@ -46,7 +46,7 @@ COMMANDS:
 
 REGULATIONS:
 
-1. If your plan consists of several steps, divide it up appropriately but only if needed
+1. If your plan consists of several steps, divide it up appropriately (if needed)
 2. Make sure you have all the information you need before you start with your plan
 3. Mark the task as complete as soon as you finished your initial main task
 
@@ -61,7 +61,7 @@ RESPONSE FORMAT:
         "thought": "thoughts",
         "main_task":"the main task you have"
         "reasoning": "reasoning",
-        "plan":"- short bulleted\n- list that conveys\n- long-term plan",
+        "plan":"[- short bulleted\n- list that conveys\n- long-term plan]",
         "speak": "your final answer if you finished your task else null"
     }
 }
@@ -134,7 +134,9 @@ Main CONTEXT:
 2. Previous Task: 
 Use the 'search_immo' command with 'acquisition_type' as 'buy', 'max_price' as '1000000', and 'location' as 'Frankfurt am Main'.
 
-3. Result of Previous Task: 
+3. Result of Previous Task:
+
+RESULT OF YOUR SEARCH:
 You have found the following propertys: [
   {
     "address": "Sachsenhausen-Nord, Frankfurt am Main",
@@ -173,14 +175,6 @@ Prompt for Sub Agents:
 
 Pre Prompt (only while starting the agent)
 
-main task:
-<the current main task>
-
-REGULATIONS:
-
-1. Make sure you have all the information you need before you start with your plan
-2. Use the "task_complete" command as soon as you finished your initial main task
-3. You are not allowed to change your main task
 
 IMPORTANT: 
 You should only respond in JSON format as described below
@@ -194,9 +188,10 @@ RESPONSE FORMAT:
         "main_task":"the main task you have"
         "reasoning": "reasoning",
         "missing_information":"information you need to complete the task",
-        "speak": "short summary of the missing information"
+        "mssing_info": "short summary of the missing information",
+        "speak_to_user":"if you need to present something (including your results)"
     },
-    "commands": {
+    "command": {
         "name": "command name",
         "args":{
             "arg_name": "value"
@@ -205,6 +200,17 @@ RESPONSE FORMAT:
 }
 
 Ensure the response can be parsed by Python json.loads
+
+
+REGULATIONS:
+
+1. Make sure you have all the information you need before you start with your plan
+2. Use the "task_complete" command as soon as you finished your initial main task
+3. You are not allowed to change your main task
+4. You are not allowed to change the RESPONSE FORMAT
+
+main task:
+<the current main task>
 
 User answer (if needed):
 User answer
@@ -226,7 +232,7 @@ RESPONSE FORMAT:
         "missing_information":"information you need to complete the task",
         "speak": "short summary of the missing information"
     },
-    "commands": {
+    "command": {
         "name": "command name",
         "args":{
             "arg_name": "value"
