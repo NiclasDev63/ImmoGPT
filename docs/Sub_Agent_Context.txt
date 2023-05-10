@@ -26,12 +26,8 @@ FINAL PROMPT
 3. Main task
 
 
-REGULATIONS:
-1. Make sure you have all the information you need before you start with your plan
-2. Use the "task_complete" command as soon as you finished your initial main task
-3. You are not allowed to change your main task
-4. You are not allowed to change the RESPONSE FORMAT
-
+IMPORTANT: 
+You should only respond in JSON format as described below
 
 RESPONSE FORMAT:
 {
@@ -53,3 +49,10 @@ RESPONSE FORMAT:
 }
 
 Ensure the response can be parsed by Python json.loads
+
+
+REGULATIONS:
+1. Make sure you have all the information you need before you start with your plan
+2. Use the "task_complete" command as soon as you finished your initial main task
+3. You are not allowed to change your main task
+4. You are not allowed to change the RESPONSE FORMAT
