@@ -5,7 +5,7 @@ INITIALIZATION
 
 3. Regulations
 
-4.Initial User question / instruction
+4. Initial User question / instruction
 
 
 IMPORTANT: 
