@@ -1,0 +1,26 @@
+INITIALIZATION
+1. Pre prompt
+
+2. Response format
+
+3. Regulations
+
+4. Main task
+
+
+STANDARD PROMPT (If needed)
+1. Response format
+
+2. Regulations
+
+3. Main task
+
+4. User Input (e.g. missing information)
+
+
+FINAL PROMPT
+1. Response format
+
+2. Regulations
+
+3. Main task
