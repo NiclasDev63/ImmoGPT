@@ -1,0 +1,13 @@
+MAIN LOOP
+1. Get User Input
+2. Start Main Agent with User Input
+3. Main Agent works out plan
+4. Start Sub Loop (Loop through Plan entries)
+5. If Plan List is empty, go back to 1
+
+
+
+SUB LOOP
+1. Start Sub Agent with sub task
+2. Get User input (if information to complete the current task is missing)
+3. Return result for next Sub Agent to use
