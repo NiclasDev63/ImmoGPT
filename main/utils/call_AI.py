@@ -2,7 +2,6 @@ import gpt4free
 import random
 from gpt4free import Provider
 import openai
-import tools.memory as memory
 
 def make_request(prompt: str) -> str:
     """

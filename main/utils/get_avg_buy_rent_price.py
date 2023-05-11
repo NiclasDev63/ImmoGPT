@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import utils.get_random_agent as get_random_agent
 import utils.call_AI as call_AI
-import tools.memory as memory
+import utils.memory as memory
 
 def get_price(data: dict) -> None or int:
 

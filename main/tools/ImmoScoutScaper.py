@@ -5,7 +5,7 @@ import utils.call_AI as call_AI
 import json
 import requests
 from datetime import datetime
-import tools.memory as memory
+import utils.memory as memory
 
 class ImmoScoutScraper:
     """

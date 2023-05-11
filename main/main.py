@@ -1,7 +1,7 @@
 import utils.pre_prompt as pre_prompt
 import utils.response_parser as response_parser
 import utils.call_AI as call_AI
-import tools.memory as memory
+import utils.memory as memory
 
 
 """ if __name__ == "__main__":

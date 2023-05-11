@@ -4,9 +4,10 @@ import utils.call_AI as call_AI
 import tools.ImmoScoutScaper as ImmoScoutScaper
 import utils.get_avg_buy_rent_price as get_avg_buy_rent_price
 from typing import Tuple
-import tools.memory as memory
+import utils.memory as memory
 
-def response_parser(response: str) -> dict:
+def response_parser(response: str) -> str or int:
+    #TODO make this Class the return result of command
     """
     Parses the response to get the answer and commands
 
@@ -56,6 +57,10 @@ def response_parser(response: str) -> dict:
             elif command["name"] == "averagePrice":
                 print("Using averagePrice command")
                 get_avg_buy_rent_price.get_price(command["args"])
+
+            elif command["name"] == "task_complete":
+                print("Using task_complete command")
+                return 0
 
 
 def _get_json_from_ai(bad_json: str) -> str or int:
