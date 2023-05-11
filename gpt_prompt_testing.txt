@@ -44,11 +44,6 @@ COMMANDS:
 
     4. Task Complete (Shutdown): "task_complete", args: "reason": "<reason>", description: "use this, if you finished your main task"
 
-REGULATIONS:
-
-1. If your plan consists of several steps, divide it up appropriately (if needed)
-2. Make sure you have all the information you need before you start with your plan
-3. Mark the task as complete as soon as you finished your initial main task
 
 IMPORTANT: 
 You should only respond in JSON format as described below
@@ -67,6 +62,12 @@ RESPONSE FORMAT:
 }
 
 Ensure the response can be parsed by Python json.loads
+
+REGULATIONS:
+
+1. If your plan consists of several steps, divide it up appropriately (if needed)
+2. Make sure you have all the information you need before you start with your plan
+3. Mark the task as complete as soon as you finished your initial main task
 
 
 ##AI immer wieder erinnern im beschriebenen Json format zu antworten
@@ -171,6 +172,12 @@ You have found the following propertys: [
 Select a suitable apartment from the search results based on the provided criteria.
 
 
+
+
+
+
+
+
 Prompt for Sub Agents:
 
 Pre Prompt (only while starting the agent)
@@ -214,6 +221,14 @@ main task:
 
 User answer (if needed):
 User answer
+
+
+
+
+
+
+
+
 
 main task:
 Ask the user for their desired acquisition type and location
