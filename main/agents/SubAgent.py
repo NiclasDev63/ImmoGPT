@@ -17,11 +17,12 @@ class SubAgent(Agent):
 
     def run_agent(self):
         while 1:
-            prompt = self._create_context()
-            result =  response_parser(make_request(prompt))
+            result =  response_parser(make_request(super().memory.get()))
+            prompt = self._create_context() + "\n" + result
             if result == 0: break
-            elif result == 1: super().memory.add({"role": "user", "content": result}) #User Answer
-            else: super().memory.add({"role": "system", "content": result}) #Result of main task
+            elif result == 1: super().memory.add({"role": "user", "content": prompt}) #User Answer
+            else: super().memory.add({"role": "system", "content": prompt}) #Result of main task (use breake here too?)
+        return result
 
 
 
