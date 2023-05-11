@@ -1,6 +1,8 @@
 from agents.Agent import Agent
 from utils.response_parser import response_parser
 from utils.call_AI import make_request
+from pre_prompt.pre_prompt import pre_prompt
+
 
 class SubAgent(Agent):
 
@@ -8,6 +10,7 @@ class SubAgent(Agent):
         super().__init__()
 
         self.main_task = f"MAIN TASK:\n{maint_task}"
+        super().memory.add({"role": "system", "content": pre_prompt() + self._create_context()})
 
         self.short_term_tasks = []
 
@@ -16,6 +19,7 @@ class SubAgent(Agent):
         return super()._create_context(self._get_reponse_format(), self._get_regulations(), self.main_task)
 
     def run_agent(self):
+        #TODO Add Assistant Answer
         while 1:
             result =  response_parser(make_request(super().memory.get()))
             prompt = self._create_context() + "\n" + result
@@ -26,7 +30,7 @@ class SubAgent(Agent):
 
 
 
-    def _get_reponse_format(self):
+    def _get_reponse_format(self) -> str:
 
         resp_format = r"""
     
@@ -59,7 +63,7 @@ class SubAgent(Agent):
         return resp_format
     
 
-    def _get_regulations(self):
+    def _get_regulations(self) -> str:
 
         regulations = """
         

@@ -20,10 +20,10 @@ class Agent:
 
 
     
-    def _get_reponse_format(self):
+    def _get_reponse_format(self) -> str:
         pass
 
-    def _get_regulations(self):
+    def _get_regulations(self) -> str:
         pass
 
 

@@ -1,5 +1,4 @@
 import utils.get_tokens as get_tokens
-from pre_prompt.pre_prompt import pre_prompt
 
 MAX_TOKENS = 4096 #Using gpt-3.5-turbo-0301
 
@@ -8,7 +7,6 @@ class Memory:
     
     def __init__(self):
         self.memory: list[dict] = []
-        self.memory.append({"role":"system", "content": pre_prompt()})
 
 
     def get(self) -> list[dict]:
@@ -29,7 +27,7 @@ class Memory:
     
 
     def add(self, chatlog: dict):
-        """max memory size is 10 entries"""
+        """max memory size is 4096 tokens"""
         
         if not isinstance(chatlog, dict):
             raise TypeError("chatlog has to be of type dict")
