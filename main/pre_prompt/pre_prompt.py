@@ -1,4 +1,4 @@
-import pre_prompt.commands as commands
+from commands.commands import get_commands
 
 def pre_prompt() -> str:
     """
@@ -18,7 +18,7 @@ def pre_prompt() -> str:
     4. Exclusively use the commands listed in double quotes e.g. "command name"
     5. Every command has a cost, so be smart and efficient and only use them if needed.
     
-    {commands.get_commands()}
+    {get_commands()}
 
     """
 

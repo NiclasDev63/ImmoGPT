@@ -1,16 +1,15 @@
 from agents.Agent import Agent
 from utils.response_parser import response_parser
 from utils.call_AI import make_request
-from pre_prompt.pre_prompt import pre_prompt
-
+from commands.commands import Commands
 
 class SubAgent(Agent):
 
     def __init__(self, maint_task: str):
-        super().__init__()
+        super().__init__("sub")
 
         self.main_task = f"MAIN TASK:\n{maint_task}"
-        super().memory.add({"role": "system", "content": pre_prompt() + self._create_context()})
+        super().memory.get(0)["content"] += self.main_task
 
         self.short_term_tasks = []
 
@@ -19,18 +18,52 @@ class SubAgent(Agent):
         return super()._create_context(self._get_reponse_format(), self._get_regulations(), self.main_task)
 
     def run_agent(self):
-        #TODO Add Assistant Answer
+        #TODO relocate Case logic and memory management to _process_result
+        
         while 1:
             result =  response_parser(make_request(super().memory.get()))
-            prompt = self._create_context() + "\n" + result
-            if result == 0: break
-            elif result == 1: super().memory.add({"role": "user", "content": prompt}) #User Answer
-            else: super().memory.add({"role": "system", "content": prompt}) #Result of main task (use breake here too?)
+            if result != None:
+                if result == 0: break
+                prompt = self._create_context() + "\n" + result
+                if result == 1: 
+                    prompt += "User: " + input("User: ")
+                    super().memory.add({"role": "user", "content": prompt}) #User Answer
+                else: super().memory.add({"role": "system", "content": prompt}) #Result of main task (use breake here too?)
+            else: break
         return result
 
+    def _process_result(self, result):
+        
+        if isinstance(result, tuple):
+            #TODO Implement cases
+            """
+            SEARCH_IMMO = 1
+            ANALYZE_IMMO = 2
+            AVERAGE_PRICE = 3
+            TASK_COMPLETE = 4
+            MISSING_INFO = 5
+            ANSWER = 6
+            """
+
+            match result[0]:
+                case Commands.SEARCH_IMMO:
+                    pass
+                case Commands.ANALYZE_IMMO:
+                    pass
+                case Commands.AVERAGE_PRICE:
+                    pass
+                case Commands.TASK_COMPLETE:
+                    pass
+                #TODO get user input
+                case Commands.MISSING_INFO:
+                    pass
+                case Commands.ANSWER:
+                    pass
 
 
-    def _get_reponse_format(self) -> str:
+
+    @staticmethod
+    def get_reponse_format() -> str:
 
         resp_format = r"""
     
@@ -62,8 +95,8 @@ class SubAgent(Agent):
 
         return resp_format
     
-
-    def _get_regulations(self) -> str:
+    @staticmethod
+    def get_regulations() -> str:
 
         regulations = """
         

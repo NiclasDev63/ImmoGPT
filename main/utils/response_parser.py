@@ -1,13 +1,11 @@
 import json
 import re
 import utils.call_AI as call_AI
-import tools.ImmoScoutScaper as ImmoScoutScaper
-import utils.get_avg_buy_rent_price as get_avg_buy_rent_price
+from tools import ImmoCalculator, ImmoScoutScaper, get_avg_buy_rent_price
 from typing import Tuple
-import utils.memory as memory
+from commands.commands import Commands
 
-def response_parser(response: str) -> str or int:
-    #TODO make this Class the return result of command
+def response_parser(response: str) -> Tuple[Commands, str]:
     """
     Parses the response to get the answer and commands
 
@@ -40,27 +38,42 @@ def response_parser(response: str) -> str or int:
                     response_json = _get_json_from_ai(response_json)
 
 
-    if isinstance(response_json, dict) and "command" in response_json:
-        #print(response_json)
-        command = response_json["command"]
+    if isinstance(response_json, dict):
+        return _extract_result(response_json)
+
+
+def _extract_result(response_json):
+        
+        missing_info = response_json["mssing_info"] if "mssing_info" in response_json else None
+        if missing_info != None and missing_info != "":
+            print("Missing Information")
+            return Commands.MISSING_INFO, "Ask the user to provide the following information:\n" + missing_info
+
+        answer = response_json["speak_to_user"] if "speak_to_user" in response_json else None
+        if answer != None and answer != "":
+            print("Answering the user")
+            return Commands.ANSWER, answer
+            
+
+        command = response_json["command"] if "command" in response_json else None
         if command != None and "name" in command:
             
-            if command["name"] == None or command["name"] == "": 
-                print(response_json["answer"])
-                memory.Memory.add({"role":"assistant", "content": response_json["answer"]})
-
-            elif command["name"] == "ImmoScout":
-                print("Using ImmouScout command")
+            if command["name"] == "search_immo":
+                print("Using search_immo command")
                 immoscraper = ImmoScoutScaper.ImmoScoutScraper()
-                immoscraper.scrapImmos(command["args"])
+                return Commands.SEARCH_IMMO, immoscraper.scrapImmos(command["args"])
 
-            elif command["name"] == "averagePrice":
-                print("Using averagePrice command")
-                get_avg_buy_rent_price.get_price(command["args"])
+            elif command["name"] == "average_price":
+                print("Using average_price command")
+                return Commands.AVERAGE_PRICE, get_avg_buy_rent_price.get_price(command["args"])
+            
+            elif command["name"] == "analyze_immo":
+                print("Using analyze_immo command")
+                return Commands.ANALYZE_IMMO, ImmoCalculator.ImmoCalculator.analyze_immo(command["args"])
 
             elif command["name"] == "task_complete":
                 print("Using task_complete command")
-                return 0
+                return Commands.TASK_COMPLETE, 0
 
 
 def _get_json_from_ai(bad_json: str) -> str or int:

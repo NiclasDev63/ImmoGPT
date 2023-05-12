@@ -1,15 +1,27 @@
 import utils.get_tokens as get_tokens
+from pre_prompt.pre_prompt import pre_prompt
+from agents import SubAgent, MainAgent
 
 MAX_TOKENS = 4096 #Using gpt-3.5-turbo-0301
 
 
 class Memory:
-    
-    def __init__(self):
-        self.memory: list[dict] = []
+
+    def __init__(self, agent_type: str):
+        pre_promt = pre_prompt()
+        if agent_type == "main":
+            resp_format = SubAgent.SubAgent.get_reponse_format()
+            regulations = SubAgent.SubAgent.get_regulations()
+            self.memory: list[dict] = [{"role": "system", "content": pre_promt + resp_format + regulations}]
+        else:
+            resp_format = MainAgent.MainAgent.get_reponse_format()
+            regulations = MainAgent.MainAgent.get_regulations()
+            self.memory: list[dict] = [{"role": "system", "content": pre_promt + resp_format + regulations}]
 
 
-    def get(self) -> list[dict]:
+    def get(self, idx: int) -> dict or list[dict]:
+        if idx != None:
+            return self.memory[idx]
         return self.memory
     
 
@@ -26,6 +38,10 @@ class Memory:
         return mem
     
 
+    def get_mem_token_count(self) -> int:
+        return get_tokens(self.get_mem_as_str())
+    
+
     def add(self, chatlog: dict):
         """max memory size is 4096 tokens"""
         
@@ -40,7 +56,7 @@ class Memory:
         if chatlog["content"] == "":
             return 
         
-        while get_tokens(self.get_mem_as_str() + chatlog["content"]) > MAX_TOKENS:
+        while self.get_mem_token_count() + chatlog["content"] > MAX_TOKENS:
             self.remove()
 
         self.memory.append(chatlog)
@@ -53,4 +69,5 @@ class Memory:
 
 
     def clear(self):
-        self.memory = []
+        while len(self.memory) > 1:
+            self.memory.remove()
