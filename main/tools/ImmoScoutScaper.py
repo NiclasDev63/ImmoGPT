@@ -5,7 +5,6 @@ import utils.call_AI as call_AI
 import json
 import requests
 from datetime import datetime
-import utils.memory as memory
 
 class ImmoScoutScraper:
     """
@@ -32,6 +31,7 @@ class ImmoScoutScraper:
 
     
     def _prompt(self, data: list[dict]):
+        #TODO DELETE
         prompt = f"""
             The user has asked you about the best properties in {self.data["location"]} which you have now selected from ImmoScout24. The following list contains the data of the properties you have picked out in Json format, of which you now pick out 5 (if available) and give the user all the important data.
             It is very Important, that you give the user the matching link and only select properties which are in the LIST WITH THE DATA.
@@ -50,7 +50,6 @@ class ImmoScoutScraper:
             {data}
         
         """
-        memory.Memory.add({"role":"system", "content": prompt})
 
         return prompt
     
@@ -89,9 +88,7 @@ class ImmoScoutScraper:
                 soup = BeautifulSoup(resp.content, 'html.parser')
                 data_list_of_dic = self._extract_results(self._html_parser(soup))
                 if data_list_of_dic != -1:
-                    resp = call_AI.make_request(self._prompt(data_list_of_dic))
-                    memory.Memory.add({"role":"assistant", "content": resp})
-                    print(resp)
+                    return data_list_of_dic
 
             else: 
                 print("Can't reach ImmoScout")

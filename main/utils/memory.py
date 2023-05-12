@@ -8,15 +8,16 @@ MAX_TOKENS = 4096 #Using gpt-3.5-turbo-0301
 class Memory:
 
     def __init__(self, agent_type: str):
-        pre_promt = pre_prompt()
         if agent_type == "main":
+            pre_prmpt = pre_prompt("main")
             resp_format = SubAgent.SubAgent.get_reponse_format()
             regulations = SubAgent.SubAgent.get_regulations()
-            self.memory: list[dict] = [{"role": "system", "content": pre_promt + resp_format + regulations}]
+            self.memory: list[dict] = [{"role": "system", "content": pre_prmpt + resp_format + regulations}]
         else:
+            pre_prmpt = pre_prompt()
             resp_format = MainAgent.MainAgent.get_reponse_format()
             regulations = MainAgent.MainAgent.get_regulations()
-            self.memory: list[dict] = [{"role": "system", "content": pre_promt + resp_format + regulations}]
+            self.memory: list[dict] = [{"role": "system", "content": pre_prmpt + resp_format + regulations}]
 
 
     def get(self, idx: int) -> dict or list[dict]:

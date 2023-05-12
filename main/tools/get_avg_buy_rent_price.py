@@ -3,9 +3,8 @@ import requests
 from bs4 import BeautifulSoup
 import utils.get_random_agent as get_random_agent
 import utils.call_AI as call_AI
-import utils.memory as memory
 
-def get_price(data: dict) -> None or int:
+def get_price(data: dict) -> int:
 
     """
     Crawls https://www.homeday.de/de/preisatlas to receive the average buy or rent 
@@ -55,13 +54,17 @@ def get_price(data: dict) -> None or int:
         avg_price = res * squaremeter
 
         resp = call_AI.make_request(_prompt(avg_price, acquisition_type, address, squaremeter))
-        memory.Memory.add({"role":"assistant", "content": resp})
+
+        resp_json = {"avg_price": avg_price, "acquisition_type": acquisition_type, "address": address, "squaremeter": squaremeter}
+
+        return resp_json
     
     else:
         print("Can't reach homeday to get average price")
         return -1
     
 def _prompt(avg_price: float, acquisition_type: str, address: str, squaremeter: float):
+    #TODO DELETE
     if acquisition_type == "sell": acquisition_type = "buy"
     prompt = f"""
     Use this Information to solve the task
@@ -70,6 +73,5 @@ def _prompt(avg_price: float, acquisition_type: str, address: str, squaremeter: 
     squaremeter:<{squaremeter}> 
     address:<{address}>
     """
-    memory.Memory.add({"role":"system", "content": prompt})
     return prompt
     

@@ -47,16 +47,19 @@ def _extract_result(response_json):
         missing_info = response_json["mssing_info"] if "mssing_info" in response_json else None
         if missing_info != None and missing_info != "":
             print("Missing Information")
-            return Commands.MISSING_INFO, "Ask the user to provide the following information:\n" + missing_info
+            return Commands.MISSING_INFO, missing_info
 
         answer = response_json["speak_to_user"] if "speak_to_user" in response_json else None
         if answer != None and answer != "":
+            result = response_json["result"] if "result" in response_json else None
+            final_answer = {"answer": answer, "result": result}
             print("Answering the user")
-            return Commands.ANSWER, answer
+            return Commands.ANSWER, final_answer
             
 
         command = response_json["command"] if "command" in response_json else None
         if command != None and "name" in command:
+            #TODO Make the functions (commands) actually return the result (and only the result)
             
             if command["name"] == "search_immo":
                 print("Using search_immo command")

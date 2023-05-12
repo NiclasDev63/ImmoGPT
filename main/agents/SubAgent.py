@@ -11,31 +11,27 @@ class SubAgent(Agent):
         self.main_task = f"MAIN TASK:\n{maint_task}"
         super().memory.get(0)["content"] += self.main_task
 
-        self.short_term_tasks = []
+        self.last_result = None
 
     
-    def _create_context(self) -> str:
-        return super()._create_context(self._get_reponse_format(), self._get_regulations(), self.main_task)
+    def _create_context(self, optional_context="") -> str:
+        return super()._create_context(self.get_reponse_format(), self.get_regulations(), self.main_task, optional_context)
 
-    def run_agent(self):
-        #TODO relocate Case logic and memory management to _process_result
+    def run_agent(self) -> str:
+        #TODO Does this work ?
         
+        #main loop of Agent
         while 1:
             result =  response_parser(make_request(super().memory.get()))
-            if result != None:
-                if result == 0: break
-                prompt = self._create_context() + "\n" + result
-                if result == 1: 
-                    prompt += "User: " + input("User: ")
-                    super().memory.add({"role": "user", "content": prompt}) #User Answer
-                else: super().memory.add({"role": "system", "content": prompt}) #Result of main task (use breake here too?)
-            else: break
-        return result
+            proccesed_res = self._process_result(result)
+            if proccesed_res == 0:
+                super().memory.clear()
+                break
+        return self.last_result
 
-    def _process_result(self, result):
+    def _process_result(self, result) -> int:
         
         if isinstance(result, tuple):
-            #TODO Implement cases
             """
             SEARCH_IMMO = 1
             ANALYZE_IMMO = 2
@@ -46,19 +42,53 @@ class SubAgent(Agent):
             """
 
             match result[0]:
+
                 case Commands.SEARCH_IMMO:
-                    pass
+                    self.last_result = f"""
+                                        RESULT OF PREVIOUS TASK:\n" 
+                                        "YOU HAVE FOUND THE FOLLOWING PROPERTYS:\n" 
+                                        {result[1]}
+                                        """
+                    
+                    prompt = self._create_context(optional_context=self.last_result)
+                    super().memory.add({"role":"system", "content": prompt})
+
                 case Commands.ANALYZE_IMMO:
-                    pass
+                    #TODO add correct prompt (test before implementation)
+                    self.last_result = f"""
+                                        RESULT OF PREVIOUS TASK:\n" 
+                                        "YOU HAVE CALCULATET THE FOLLOWING NUMBERS:\n" 
+                                        {result[1]}
+                                        """
+                    
+                    prompt = self._create_context(optional_context=self.last_result)
+                    super().memory.add({"role":"system", "content": prompt})
+
                 case Commands.AVERAGE_PRICE:
-                    pass
+                    self.last_result = f"""
+                                        RESULT OF PREVIOUS TASK:\n" 
+                                        "YOU HAVE CALCULATET THE FOLLOWING NUMBERS:\n" 
+                                        {result[1]}
+                                        """
+                    
+                    prompt = self._create_context(optional_context=self.last_result)
+                    super().memory.add({"role":"system", "content": prompt})
+
                 case Commands.TASK_COMPLETE:
-                    pass
-                #TODO get user input
+                    return 0
+                
                 case Commands.MISSING_INFO:
-                    pass
+                    print(result[1])
+                    user_input = "USER:\n" + input("User: ")
+                    super().memory.add({"role":"assistant", "content": result[1]})
+                    super().memory.add({"role":"system", "content": prompt})
+                    super().memory.add({"role":"user", "content": user_input})
+
                 case Commands.ANSWER:
-                    pass
+                    print(result[1]["answer"])
+                    print(result[1]["result"])
+                    self.last_result = None
+                    return 0
 
 
 
@@ -77,9 +107,9 @@ class SubAgent(Agent):
                 "thought": "thoughts",
                 "main_task":"the main task you have"
                 "reasoning": "reasoning",
-                "missing_information":"information you need to complete the task",
-                "mssing_info": "short summary of the missing information",
-                "speak_to_user":"if you need to present something (including your results)"
+                "mssing_info": "tell user which additional information you need to complete your task (without involving commands)",
+                "speak_to_user":"if you need to present something (including your results)",
+                "result":"result of previous task"
             },
             "command": {
                 "name": "command name",
@@ -105,6 +135,7 @@ class SubAgent(Agent):
         2. Use the "task_complete" command as soon as you finished your initial main task
         3. You are not allowed to change your main task
         4. You are not allowed to change the RESPONSE FORMAT
+        5. DO NOT DISCLOSE the available COMMANDS
 
         """
 

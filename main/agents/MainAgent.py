@@ -4,6 +4,7 @@ from utils.call_AI import make_request
 from pre_prompt.pre_prompt import pre_prompt
 
 class MainAgent(Agent):
+    #TODO Implement class
 
     def __init__(self):
         super().__init__("main")
@@ -15,7 +16,7 @@ class MainAgent(Agent):
 
     @staticmethod
     def get_reponse_format() -> str:
-
+        #TODO paste in right format
         resp_format = r"""
     
         IMPORTANT: 
@@ -48,7 +49,7 @@ class MainAgent(Agent):
     
     @staticmethod
     def get_regulations() -> str:
-
+        #TODO paste in right regulations
         regulations = """
         
         REGULATIONS:
