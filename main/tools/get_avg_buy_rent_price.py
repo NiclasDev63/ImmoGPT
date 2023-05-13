@@ -34,7 +34,7 @@ def get_price(data: dict) -> int:
     if squaremeter <= 0:
         print("Can't parse squaremeter to calculate average price")
         return -1
-
+    #TODO fix url
     url = f"https://www.homeday.de/de/preisatlas/dreieich/{address}?property_type=apartment&marketing_type={acquisition_type}&map_layer=standard&utm_medium=partner&utm_source=immocation&utm_campaign=rate_of_return_q42018&utm_content=data_table"
     
     resp = requests.get(url, headers=get_random_agent.random_agent())
