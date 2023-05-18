@@ -25,3 +25,5 @@ if __name__ == "__main__":
     main()
 
 #TODO implement logger instead of using print for better understanding and logging the behaviour of AI
+#TODO refactor code
+#TODO make code prettier

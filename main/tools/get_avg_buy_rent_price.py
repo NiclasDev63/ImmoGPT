@@ -60,3 +60,16 @@ def get_price(data: dict) -> dict:
     else:
         print("Can't reach homeday to get average price")
         return -1
+    
+def _prompt(avg_price: float, acquisition_type: str, address: str, squaremeter: float):
+    #TODO DELETE
+    if acquisition_type == "sell": acquisition_type = "buy"
+    prompt = f"""
+    Use this Information to solve the task
+    task:<"Was ist eine angemessene Miete für ein apartment in Frankfurt am Main mit 20 qm">
+    average price:<{avg_price}>  
+    squaremeter:<{squaremeter}> 
+    address:<{address}>
+    """
+    return prompt
+    
