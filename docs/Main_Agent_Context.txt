@@ -9,25 +9,24 @@ INITIALIZATION
 
 
 IMPORTANT: 
-You should only respond in JSON format as described belo
+You should only respond in JSON format as described below
 
 RESPONSE FORMAT:
 {
     "conversation":
     {
         "thought": "thoughts",
-        "main_task":"the main task you have"
         "reasoning": "reasoning",
-        "plan":"[- short bulleted\n- list that conveys\n- long-term plan]",
-        "speak": "your final answer if you finished your task else null"
+        "plan":"[- short bulleted\n- list that conveys\n- long-term plan](if needed and required information available)",
+        "speak":"your answer, if you dont need a plan or have any questions"
     }
 }
 
 Ensure the response can be parsed by Python json.loads
 
 
+
 REGULATIONS:
 
-1. If your plan consists of several steps, divide it up appropriately (if needed)
-2. Make sure you have all the information you need before you start with your plan
-3. Mark the task as complete as soon as you finished your initial main task
+1. Always make sure you ask the user if you need fourther details before you create a plan
+2. You are NOT ALLOWED TO CHANGE the RESPONSE FORMAT

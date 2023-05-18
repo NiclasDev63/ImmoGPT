@@ -1,28 +1,15 @@
-import utils.get_tokens as get_tokens
-from pre_prompt.pre_prompt import pre_prompt
-from agents import SubAgent, MainAgent
+from utils.get_tokens import num_tokens_from_string
 
 MAX_TOKENS = 4096 #Using gpt-3.5-turbo-0301
 
-
 class Memory:
 
-    def __init__(self, agent_type: str):
-        if agent_type == "main":
-            pre_prmpt = pre_prompt("main")
-            resp_format = SubAgent.SubAgent.get_reponse_format()
-            regulations = SubAgent.SubAgent.get_regulations()
-            self.memory: list[dict] = [{"role": "system", "content": pre_prmpt + resp_format + regulations}]
-        else:
-            pre_prmpt = pre_prompt()
-            resp_format = MainAgent.MainAgent.get_reponse_format()
-            regulations = MainAgent.MainAgent.get_regulations()
-            self.memory: list[dict] = [{"role": "system", "content": pre_prmpt + resp_format + regulations}]
+    def __init__(self):
+        self.memory: list[dict] = []
 
 
-    def get(self, idx: int) -> dict or list[dict]:
-        if idx != None:
-            return self.memory[idx]
+    def get(self, idx: int=None) -> dict or list[dict]:
+        if idx != None: return self.memory[idx]
         return self.memory
     
 
@@ -30,7 +17,7 @@ class Memory:
         for i in reversed(self.memory):
             if i["role"] == "user":
                 return i["content"]
-            
+                 
     
     def get_mem_as_str(self) -> str:
         mem = ""
@@ -40,7 +27,7 @@ class Memory:
     
 
     def get_mem_token_count(self) -> int:
-        return get_tokens(self.get_mem_as_str())
+        return num_tokens_from_string(self.get_mem_as_str())
     
 
     def add(self, chatlog: dict):
@@ -57,7 +44,7 @@ class Memory:
         if chatlog["content"] == "":
             return 
         
-        while self.get_mem_token_count() + chatlog["content"] > MAX_TOKENS:
+        while self.get_mem_token_count() + num_tokens_from_string(chatlog["content"]) > MAX_TOKENS:
             self.remove()
 
         self.memory.append(chatlog)

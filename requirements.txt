@@ -1,3 +1,4 @@
 beautifulsoup4
-gpt4free
 requests
+openai
+tiktoken

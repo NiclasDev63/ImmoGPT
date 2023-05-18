@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import utils.get_coordinates as get_coordinates
 import utils.get_random_agent as random_agent
-import utils.call_AI as call_AI
 import json
 import requests
 from datetime import datetime
@@ -24,34 +23,11 @@ class ImmoScoutScraper:
         """
         self.reese84 = {
             "reese84": 
-            "3:G5Bi4THkR7uCw8I2E64pJg==:SOX2y1OoDuK7s15MhWvgylm7IVUUqsBlUJY/yHHk74gLYhMfyXQOsyTyP9jt9lIH80jYgqgIJz8IMOtzE2y/dTdWrCrtrg5AZHk6+OjL9czr+I7g9zUtbY0+/0KUMFUkmOsT7YQv/jzPeVHTeMgchfRHLEeceTCuiHJ/upwQoxCdNz+MDvytOyH57h02nwm0IWcHqUMedci0nnJfp54iFRjWIAqJB2t9jfM8dJ+Y+mun3eiiMvu98rZsil2UQ1bbPirThBu/fyMCYHO1ubGbFU6j+G+ZQNyolSIbEKpyQoT92jU1xcQIhbEZZaR0xRDxQmnYE8WHgS+fyvR+SDb7K6BGni8dYb43/fzGPEwKsdHoJCDyVPoEQleP+H3LVIuFAMqZ5z4QZ8UbMU0YdBqLHKCHVaGheBm7thMthYfu4oVImR20bnldYsNbesDnYLMIEBzUYSp/Zi9mFRYoEWXzjRnuKwZVDnViGqPxSM2mmuM=:tbCY841hs8OlDx5Z8BgN38x4mQjbiZBC9/OwZUg4upI="
+            "3:tEu1+o2L8zyOAgrhcZ6Cig==:9WsTVbwI7st9KjYZbdEL8YKxz76vKFxg/aRr0CN+4/1b5FR3sdHb51M2sdRXJ2DAoYYIUJINEZVC6EZUZp4qGm1nXFwZ0KvuBimoVjMfN/DYi0tO0c7TEQsxxCoGkuc2VUIThMkKOKVsl1c71BNy4OZUFsT1DNHZzPuJkn/UiSegmVPH0Ey8dS5w3yb7lyqGOMaH06SKX96xAtcFuBanG2kX3docotvgRCeDFTQNaZ9a8trgq8mFSEOUFPYMfwsf8bKMY4yxR8vANH/uQUg7XQxiBwW0ss/yO1SyT/I9KV52rGPBHsktauI2vf8KA2l4EABmlfKWwE53fHKz03fOvUqRQjStfCGiC+mgVbZ5UeiVoelOVI2ge8PEEfPDV8pzEOqcVMyQavl0zBJYve3EtB488XD/1TZGxJ7QAR8OFcSdZVNPQA6HLGB2Um6Ou3vUjMav6IyAdm0or8+GIbDHDTMEOO9Kqlx57EJbu15XoM79tjjXWuaMBCYkzMPHvjCz:nlJmIaG+fDtv0Co/Dwo9QiEzhVWv08uhPG8N7VBi2xk="
         }
 
         self.base_url = "https://www.immobilienscout24.de/Suche/radius/"
 
-    
-    def _prompt(self, data: list[dict]):
-        #TODO DELETE
-        prompt = f"""
-            The user has asked you about the best properties in {self.data["location"]} which you have now selected from ImmoScout24. The following list contains the data of the properties you have picked out in Json format, of which you now pick out 5 (if available) and give the user all the important data.
-            It is very Important, that you give the user the matching link and only select properties which are in the LIST WITH THE DATA.
-
-            LIST WITH THE DATA:
-
-            {data}
-        
-        """
-
-        prompt = f"""
-            Parse the following JSON and return the first 10 results (or less if not that much are available) nicely formatted as a table
-
-            JSON WITH THE DATA:
-
-            {data}
-        
-        """
-
-        return prompt
     
     def _print_search_params(self):
         price_range = ""

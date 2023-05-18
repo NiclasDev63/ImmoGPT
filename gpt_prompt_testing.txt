@@ -39,8 +39,8 @@ COMMANDS:
                 "location": "<location of property>"
                 "acquisition_type": "<acquisition_type>"
                 "squaremeter": "<squaremeter>"
-            }
-        description:"
+            },
+        description:"to use when you need to find out if the price of a property is reasonable"
 
     4. Task Complete (Shutdown): "task_complete", args: "reason": "<reason>", description: "use this, if you finished your main task"
 
@@ -49,25 +49,22 @@ IMPORTANT:
 You should only respond in JSON format as described below
 
 RESPONSE FORMAT:
-
 {
     "conversation":
     {
         "thought": "thoughts",
-        "main_task":"the main task you have"
         "reasoning": "reasoning",
         "plan":"[- short bulleted\n- list that conveys\n- long-term plan]",
-        "speak": "your final answer if you finished your task else null"
+        "speak":"your answer, if you dont need a plan"
     }
 }
 
 Ensure the response can be parsed by Python json.loads
 
-REGULATIONS:
 
-1. If your plan consists of several steps, divide it up appropriately (if needed)
-2. Make sure you have all the information you need before you start with your plan
-3. Mark the task as complete as soon as you finished your initial main task
+REGULATIONS:
+1. Always make sure you ask the user if you need fourther details
+2. You are NOT ALLOWED TO CHANGE the RESPONSE FORMAT
 
 
 ##AI immer wieder erinnern im beschriebenen Json format zu antworten

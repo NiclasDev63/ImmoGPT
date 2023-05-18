@@ -3,11 +3,21 @@ from utils.memory import Memory
 
 class Agent:
 
-    def __init__(self, agent_type: str):
+    def __init__(self):
+        
+        self.memory = Memory()
 
-        self.memory = Memory(agent_type)
+    def run_agent(self):
+        pass
 
-    def _create_context(self, resp_format: str, regulations: str, main_task: str="", optional_context: str="") -> str:
+    def _process_reponse(self, response: tuple) -> int:
+        pass
+    
+    def _init_memory(self):
+        pass
+
+    @staticmethod
+    def _create_context(resp_format: str, regulations: str, main_task: str="", optional_context: str="") -> str:
 
         context = resp_format
 
@@ -20,7 +30,6 @@ class Agent:
         context += "REMEMBER TO ONLY USE THE DESIRED RESPONSE FORMAT"
 
         return context
-
 
     @staticmethod
     def get_reponse_format() -> str:

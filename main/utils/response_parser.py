@@ -4,8 +4,10 @@ import utils.call_AI as call_AI
 from tools import ImmoCalculator, ImmoScoutScaper, get_avg_buy_rent_price
 from typing import Tuple
 from commands.commands import Commands
+from agents.main_agent.MainAgentReponseTypes import MainAgentReponseTypes
+from agents.sub_agent.SubAgentResponseTypes import SubAgentReponseTypes
 
-def response_parser(response: str) -> Tuple[Commands, str]:
+def response_parser(response: str, agent_type: str) -> Tuple[Commands, str]:
     """
     Parses the response to get the answer and commands
 
@@ -20,8 +22,17 @@ def response_parser(response: str) -> Tuple[Commands, str]:
     """
 
     response_json = ""
-
-    print("DATA", response)
+    #TODO Delete
+    # response = r"""{
+    #         "thought": "The user wants to buy an apartment in Frankfurt am Main.",
+    #         "reasoning": "To assist the user in finding a suitable apartment in Frankfurt am Main, I can use the 'search_immo' command with the 'acquisition_type' set to 'kaufen' (buy) and the 'location' set to 'Frankfurt am Main'.",
+    #         "plan": [
+    #         "- Use 'search_immo' command",
+    #         "- Set 'acquisition_type' to 'kaufen' (buy)",
+    #         "- Set 'location' to 'Frankfurt am Main'"
+    #         ],
+    #         "speak": ""
+    #         }"""
 
     try:
         response_json = json.loads(response)
@@ -37,28 +48,52 @@ def response_parser(response: str) -> Tuple[Commands, str]:
                 else:
                     response_json = _get_json_from_ai(response_json)
 
+    print("REPONSE JSON: ", response_json, "\n")
 
     if isinstance(response_json, dict):
-        return _extract_result(response_json)
+        return _extract_result_from_subAgent(response_json) if agent_type == "sub" else _extract_result_from_mainAgent(response_json)
+
+#TODO Maybe always return what the main agent hast to say ?
+def _extract_result_from_mainAgent(response_json: dict):
+    plan = response_json["plan"] if "plan" in response_json else None
+    if isinstance(plan, list) and len(plan) > 0:
+        final_plan = []
+        count = -1
+        for p in plan:
+            if p[0] == "-":
+                final_plan[count] += p
+            else:
+                final_plan.append(p)
+                count += 1
+        print("Returning Plan")
+        return MainAgentReponseTypes.PLAN, final_plan
+    
+    speak = response_json["speak"] if "speak" in response_json else None
+    if speak and speak != "":
+        print("Answering the user")
+        return MainAgentReponseTypes.SPEAK, speak
 
 
-def _extract_result(response_json):
+
+def _extract_result_from_subAgent(response_json: dict):
         
-        missing_info = response_json["mssing_info"] if "mssing_info" in response_json else None
-        if missing_info != None and missing_info != "":
-            print("Missing Information")
-            return Commands.MISSING_INFO, missing_info
+        if "conversation" in response_json:
+            conversation_json = response_json["conversation"]
+            missing_info = conversation_json["mssing_info"] if "mssing_info" in conversation_json else None
+            if missing_info and missing_info != "":
+                print("Missing Information")
+                return SubAgentReponseTypes.MISSING_INFO, missing_info
 
-        answer = response_json["speak_to_user"] if "speak_to_user" in response_json else None
-        if answer != None and answer != "":
-            result = response_json["result"] if "result" in response_json else None
-            final_answer = {"answer": answer, "result": result}
-            print("Answering the user")
-            return Commands.ANSWER, final_answer
+            answer = conversation_json["speak_to_user"] if "speak_to_user" in conversation_json else None
+            if answer and answer != "":
+                result = conversation_json["result"] if "result" in conversation_json else None
+                final_answer = {"answer": answer, "result": result}
+                print("Answering the user")
+                return SubAgentReponseTypes.ANSWER, final_answer
             
 
         command = response_json["command"] if "command" in response_json else None
-        if command != None and "name" in command:
+        if command and "name" in command:
             #TODO Make the functions (commands) actually return the result (and only the result)
             
             if command["name"] == "search_immo":
@@ -80,7 +115,7 @@ def _extract_result(response_json):
 
 
 def _get_json_from_ai(bad_json: str) -> str or int:
-    # If nothing works, trying to get ChatGPT to parse the reponse
+    # If nothing works, trying to get GPT3.5 to parse the response
     prompt = f"Fix the following invalid JSON and only return the correct JSON without any other information: {bad_json}"
     try:
         response_json = call_AI.make_request(prompt)

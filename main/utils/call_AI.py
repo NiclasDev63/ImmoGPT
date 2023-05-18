@@ -1,9 +1,10 @@
-import gpt4free
-import random
-from gpt4free import Provider
+import os
 import openai
+from utils import memory
 
-def make_request(prompt: str) -> str:
+openai.api_key = os.getenv("OPENAI_KEY")
+
+def make_request(message_history: memory) -> str:
     """
     Makes a request to one Provder from provider_list
 
@@ -16,46 +17,13 @@ def make_request(prompt: str) -> str:
     Raises:
         Exception: If any error occurs while making the request
     """
-
-
-    # openai.api_key = OPENAI_API_KEY
-    # print("USING AI AND PRINTING MEMORY: ", memory.Memory.get())
-    # completion = openai.ChatCompletion.create(
-    # model="gpt-3.5-turbo",
-    # messages= memory.Memory.get()
-    # )
-
-    # return completion.choices[0].message.content
-
-
-    """ called_provider = set()
-
-        provider_list = {
-            "You": Provider.You,
-            "Theb": Provider.Theb,
-            "UseLess": Provider.UseLess
-        }
-
-        get_provider = lambda: random.choice(list(provider_list.items()))
-        
-        response = ""
-
-        while 1:
-
-            if len(called_provider) == 3: print("No Provider available")
-
-            choosen_provider = get_provider()
-            called_provider.add(choosen_provider[1])
-            print("USING: ", choosen_provider[0])
-
-            try:
-                response = gpt4free.Completion.create(choosen_provider[1], prompt=prompt)
-                break
-            except Exception as e:
-                print("Exception thrown while using: ", choosen_provider[0])
-                print("Error: ", e)
     
+    if isinstance(message_history, list) and len(message_history) > 0 and \
+        isinstance(message_history[0], dict):
+        completion = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo-0301",
+                    messages= message_history
+                    )
 
-        if choosen_provider[0] == "UseLess": return response["text"]
-        else: return response
-        """
+        return completion.choices[0].message.content
+    raise TypeError("message_history is in wrong format")

@@ -2,9 +2,8 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import utils.get_random_agent as get_random_agent
-import utils.call_AI as call_AI
 
-def get_price(data: dict) -> int:
+def get_price(data: dict) -> dict:
 
     """
     Crawls https://www.homeday.de/de/preisatlas to receive the average buy or rent 
@@ -34,7 +33,8 @@ def get_price(data: dict) -> int:
     if squaremeter <= 0:
         print("Can't parse squaremeter to calculate average price")
         return -1
-
+    
+    #TODO Fix URL
     url = f"https://www.homeday.de/de/preisatlas/dreieich/{address}?property_type=apartment&marketing_type={acquisition_type}&map_layer=standard&utm_medium=partner&utm_source=immocation&utm_campaign=rate_of_return_q42018&utm_content=data_table"
     
     resp = requests.get(url, headers=get_random_agent.random_agent())
@@ -53,8 +53,6 @@ def get_price(data: dict) -> int:
 
         avg_price = res * squaremeter
 
-        resp = call_AI.make_request(_prompt(avg_price, acquisition_type, address, squaremeter))
-
         resp_json = {"avg_price": avg_price, "acquisition_type": acquisition_type, "address": address, "squaremeter": squaremeter}
 
         return resp_json
@@ -62,16 +60,3 @@ def get_price(data: dict) -> int:
     else:
         print("Can't reach homeday to get average price")
         return -1
-    
-def _prompt(avg_price: float, acquisition_type: str, address: str, squaremeter: float):
-    #TODO DELETE
-    if acquisition_type == "sell": acquisition_type = "buy"
-    prompt = f"""
-    Use this Information to solve the task
-    task:<"Was ist eine angemessene Miete für ein apartment in Frankfurt am Main mit 20 qm">
-    average price:<{avg_price}>  
-    squaremeter:<{squaremeter}> 
-    address:<{address}>
-    """
-    return prompt
-    

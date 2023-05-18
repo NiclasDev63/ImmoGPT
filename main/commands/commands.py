@@ -5,8 +5,6 @@ class Commands(Enum):
     ANALYZE_IMMO = 2
     AVERAGE_PRICE = 3
     TASK_COMPLETE = 4
-    MISSING_INFO = 5
-    ANSWER = 6
 
 def get_commands():
     """List of commands the AI can use for completing the desired task"""
