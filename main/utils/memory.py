@@ -2,6 +2,7 @@ from utils.get_tokens import num_tokens_from_string
 
 MAX_TOKENS = 4096 #Using gpt-3.5-turbo-0301
 
+
 class Memory:
 
     def __init__(self):

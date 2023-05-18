@@ -3,7 +3,7 @@ from utils.response_parser import response_parser
 from utils.call_AI import make_request
 from pre_prompt.pre_prompt import pre_prompt
 
-
+#TODO Add Milvus (and embedding model) for better context creation (only for main agent)
 class MainAgent(Agent):
     #TODO Implement class
 
