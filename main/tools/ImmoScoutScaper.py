@@ -99,6 +99,8 @@ class ImmoScoutScraper:
         if url.endswith("livingspace=&"): return ""
         else: return url
 
+    #TODO add extraction of number of rooms
+
     def _extract_price(self) -> str:
         
         """Converts the wanted price into url format"""

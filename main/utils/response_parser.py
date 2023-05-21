@@ -12,7 +12,9 @@ def response_parser(response: str, agent_type: str) -> Tuple[Commands, str]:
     Parses the response to get the answer and commands
 
     Args:
-        response (str): The raw reponse from the API call
+        response: The raw reponse from the API call
+
+        agent_type: The agent type for which the request should be parsed
 
     Returns:
         dict: Valid json which includes the command and answer
@@ -22,17 +24,6 @@ def response_parser(response: str, agent_type: str) -> Tuple[Commands, str]:
     """
 
     response_json = ""
-    #TODO Delete
-    # response = r"""{
-    #         "thought": "The user wants to buy an apartment in Frankfurt am Main.",
-    #         "reasoning": "To assist the user in finding a suitable apartment in Frankfurt am Main, I can use the 'search_immo' command with the 'acquisition_type' set to 'kaufen' (buy) and the 'location' set to 'Frankfurt am Main'.",
-    #         "plan": [
-    #         "- Use 'search_immo' command",
-    #         "- Set 'acquisition_type' to 'kaufen' (buy)",
-    #         "- Set 'location' to 'Frankfurt am Main'"
-    #         ],
-    #         "speak": ""
-    #         }"""
 
     try:
         response_json = json.loads(response)
@@ -55,6 +46,7 @@ def response_parser(response: str, agent_type: str) -> Tuple[Commands, str]:
 
 #TODO Maybe always return what the main agent hast to say ?
 def _extract_result_from_mainAgent(response_json: dict):
+    """extracts the result for the mainagent"""
     plan = response_json["plan"] if "plan" in response_json else None
     if isinstance(plan, list) and len(plan) > 0:
         final_plan = []
@@ -76,7 +68,7 @@ def _extract_result_from_mainAgent(response_json: dict):
 
 
 def _extract_result_from_subAgent(response_json: dict):
-        
+        """extracts the result for the subagent"""
         if "conversation" in response_json:
             conversation_json = response_json["conversation"]
             missing_info = conversation_json["mssing_info"] if "mssing_info" in conversation_json else None
@@ -115,7 +107,7 @@ def _extract_result_from_subAgent(response_json: dict):
 
 
 def _get_json_from_ai(bad_json: str) -> str or int:
-    # If nothing works, trying to get GPT3.5 to parse the response
+    """uses gpt as last step to get the valid json if nothing else worked"""
     prompt = f"Fix the following invalid JSON and only return the correct JSON without any other information: {bad_json}"
     try:
         response_json = call_AI.make_request(prompt)
@@ -125,6 +117,7 @@ def _get_json_from_ai(bad_json: str) -> str or int:
         return -1
 
 def _get_json_from_response(response: str) -> Tuple[str, str]:
+    """searches for json within a given string"""
     response_json = response
     try:
         response_json = re.search(r'{.*}', response, re.DOTALL).group(0)
@@ -136,6 +129,7 @@ def _get_json_from_response(response: str) -> Tuple[str, str]:
 
 
 def _add_quotes_to_property_and_value(bad_json: str, error_msg: str) -> str:
+    """adds quotes to properties and values"""
     while error_msg.startswith("Expecting property name enclosed in double quotes") or \
         error_msg.startswith("Expecting value"):
         char_pos = _extract_char_pos(error_msg)
@@ -148,6 +142,7 @@ def _add_quotes_to_property_and_value(bad_json: str, error_msg: str) -> str:
     return bad_json
 
 def _is_valid_json(json_str: str) -> bool:
+    """checks if a given string is valid json"""
     try:
         json.loads(json_str)
         return True
@@ -156,4 +151,5 @@ def _is_valid_json(json_str: str) -> bool:
 
 
 def _extract_char_pos(error_msg: str) -> int:
+    """extracts the char position, where the error appears"""
     return int(re.compile(r"\(char (\d+)\)").search(error_msg)[1])

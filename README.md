@@ -17,16 +17,11 @@ Since the ImmoScout24 API is unfortunately very expensive (at least the last tim
 
 
 ## ✅ TODOs
+- [ ] implement logger instead of using print for better understanding and logging the behaviour of AI
 - [ ] find free and good embedding models for similarity search  
 - [ ] add milvus support
-- [ ] elaborate execution flow
-1. First task
-2. start agent to create plan and add bullet points to task list
-3. loop through task list
-4. start agent to execute first task (should add short term task (to short term task list) if needed to achieve its main goal)
-5. back to 2. until main task list is empty
-6. present final answer to the user
-- [ ] edit / create prompts
-- [ ] find best way to create context
+- [ ] 
 - [ ] finish tools
- 
+- [ ] make tools microservice ? 
+- [ ] refactor code
+- [ ] make code prettier

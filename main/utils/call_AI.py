@@ -9,13 +9,13 @@ def make_request(message_history: memory) -> str:
     Makes a request to one Provder from provider_list
 
     Args:
-        prompt (str): The prompt to send to the API
+        message_history: The message history between the user, system and assistant
 
     Returns:
-        str: The answer to the prompt
+        str: The answer to the latest prompt
 
     Raises:
-        Exception: If any error occurs while making the request
+        TypeError: If the message_history has the wrong format
     """
     
     if isinstance(message_history, list) and len(message_history) > 0 and \
@@ -26,4 +26,4 @@ def make_request(message_history: memory) -> str:
                     )
 
         return completion.choices[0].message.content
-    raise TypeError("message_history is in wrong format")
+    raise TypeError("message_history has the wrong format")

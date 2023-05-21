@@ -27,7 +27,6 @@ class SubAgent(Agent):
     def run_agent(self) -> str:
         #TODO Does this work ?
         
-        #main loop of Agent
         continuous_counter = 1
         while 1:
             if continuous_counter >= CONTINUOS_LIMIT: print("CONTINUOS_LIMIT reached"); break
@@ -52,6 +51,8 @@ class SubAgent(Agent):
 
     def _process_reponse(self, response: tuple) -> int:
         
+        """Processes the response of AI"""
+
         if isinstance(response, tuple):
             """
             SEARCH_IMMO = 1

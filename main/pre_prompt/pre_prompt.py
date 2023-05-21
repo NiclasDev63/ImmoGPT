@@ -2,11 +2,10 @@ from commands.commands import get_commands
 
 def pre_prompt(agent_type: str="") -> str:
     """
-    The prompt which is send before every request
-    to "configure" ChatGPT
+    The prompt which is used to initialize every agent
 
     Returns:
-        The pre prompt including the Users prompt
+        The pre prompt
     """
 
     pre_prompt = f"""

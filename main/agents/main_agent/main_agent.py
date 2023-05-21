@@ -22,6 +22,7 @@ class MainAgent(Agent):
         return Agent._create_context(self.get_reponse_format(), self.get_regulations(), optional_context=optional_context)
 
     def add_memory(self, role: str,  memory: str):
+        """adds memory to the agent"""
         self.memory.add({"role": role, "content": memory})
 
     def _init_memory(self):
