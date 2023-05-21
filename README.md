@@ -23,7 +23,6 @@ Since the ImmoScout24 API is unfortunately very expensive (at least the last tim
 - [ ] implement logger instead of using print for better understanding and logging the behaviour of AI
 - [ ] find free and good embedding models for similarity search  
 - [ ] add milvus support
-- [ ] 
 - [ ] finish tools
 - [ ] make tools microservice ? 
 - [ ] refactor code
